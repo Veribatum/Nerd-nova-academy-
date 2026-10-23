@@ -1,33 +1,33 @@
 # Nerd Nova Academy
 
-A mobile-friendly, sci-fi styled networking refresher. Built as a **static web app**: no build step, no API keys, no accounts, no paid services.
+Sci-fi networking learning game for mobile and desktop. Deployed directly from GitHub Pages (`main` / `root`).
 
-## Play
+## Current release: 0.2
 
-Open `index.html` locally or enable **GitHub Pages → Deploy from a branch → main → /(root)**. Changes pushed to `main` will then publish to the same Pages URL.
+- **Mission Control:** upgraded game-like responsive UI with Nova-themed mission briefing, XP, ranks, objectives, achievements, and mission parameters.
+- **Three missions:** The Silent Camera (interactive lab), Ghost in the Wire (packet investigation), and Route to Nowhere (diagnostic challenge).
+- **Network Map:** click devices to inspect synthetic IP, VLAN and stream configurations.
+- **Packet Capture:** inspect a synthetic Ethernet/ARP/ICMP/UDP evidence table.
+- **Simulated Terminal:** supported commands: `help`, `ping 10.0.0.42`, `ip addr`, `ip route`, `ss -uln`, `show camera`, `clear`. Not a shell; no real commands execute.
+- **Repair Challenge:** configure the camera's UDP destination port to restore the simulated video feed.
+- **Field Guide:** seven OSI layers with troubleshooting applications.
+- **Progress:** local browser save. Manual export/import between devices in **Transfer Save**. No automatic cloud sync yet.
+- **Nova rewards:** reward system and character integration placeholders. Real Nova image art has not been embedded into the site yet.
 
-## Version 0.1
+## Deploy
 
-- Mission hub and three playable networking troubleshooting missions: **The Silent Camera**, **VLAN Lockout**, and **Packet Hunter**.
-- Interactive OSI Layer 1–7 field guide.
-- No preselected multiple-choice answers; explanation after each answer is locked in.
-- XP, levels, mission completion, and achievements.
-- Progress stored locally in that browser using `localStorage` (not synchronized between desktop and phone; clearing site data resets it).
-- Responsive interface for desktop and mobile.
-- Fictional IP ranges and equipment scenarios; no operational or classified information.
+Settings → Pages → Deploy from branch → `main` → `/(root)`.
 
-## Roadmap
+## Planned next
 
-1. Scenario-driven learning paths: subnetting, TCP/UDP, routing, switching, Wireshark and RHEL.
-2. More interactive network topology puzzles and meaningful scoring tied to successful troubleshooting.
-3. Wireshark `.pcap` practice and downloadable sample packet captures, with safe offline analysis.
-4. Optional, separately installed local Windows companion to access TShark and local virtualization labs. GitHub Pages cannot directly control installed software.
-5. Optional Python course track, without replacing the current VS Code learning workflow.
+1. Integrate Nova's exported character image assets and unlockable morale gallery.
+2. Genuine cross-device account/cloud synchronization, with an opt-in login mechanism.
+3. Additional interactive missions with diagnostic trade-offs and multiple faults.
+4. Sample downloadable PCAPs, import and offline packet analysis.
+5. Optional local companion for TShark, Packet Tracer lab checks and RHEL workflows.
 
-## Safety
+## Safety and scope
 
-Never add real Navy network diagrams, secret/controlled IP maps, configuration dumps, credentials, keys, or operational packet captures to this public repository. All lab exercises should be synthetic and unclassified.
+This is a **public** repository. Never add classified information, controlled work network diagrams, internal addresses, passwords, real configuration dumps, packet captures from work, encryption details, or credentials. Training labs must remain synthetic and unclassified.
 
-## Tech
-
-Standalone HTML/CSS/JavaScript; web fonts are optional. The learning app works without an AI API or any recurring fees.
+No paid API service, external AI model, or backend required for the current build.
