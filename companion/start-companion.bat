@@ -1,5 +1,4 @@
 @echo off
 cd /d "%~dp0"
-py -3 server.py
-if errorlevel 1 python server.py
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0start-companion.ps1"
 pause
