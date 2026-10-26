@@ -80,8 +80,11 @@ export class CloudSync extends EventTarget {
   async readRemote(session = this.session) {
     const file = await this.api(this.path(session), { allowMissing: true }, session);
     if (!file) return null;
-    if (file.type !== 'file' || !file.content || file.size > 3_000_000) throw Error('Cloud save file is unavailable. Local progress is safe.');
-    return { sha: file.sha, envelope: JSON.parse(text.decode(unbase64(file.content.replace(/\s/g, '')))) };
+    if (file.type !== 'file' || file.size > 3_000_000 || typeof file.sha !== 'string') throw Error('Cloud save file is unavailable. Local progress is safe.');
+    // GitHub omits inline Contents API bytes for files over 1 MiB.
+    const blob = file.content ? file : await this.api(`/repos/${session.repo}/git/blobs/${file.sha}`, {}, session);
+    if (!blob.content || (blob.encoding && blob.encoding !== 'base64')) throw Error('The encrypted cloud bytes could not be read. Local progress is safe.');
+    return { sha: file.sha, envelope: JSON.parse(text.decode(unbase64(blob.content.replace(/\s/g, '')))) };
   }
   schedule() { clearTimeout(this.timer); this.setStatus('Save queued'); this.timer = setTimeout(() => this.synchronize().catch(() => {}), 1800); }
   async synchronize() {

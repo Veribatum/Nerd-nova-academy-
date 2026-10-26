@@ -37,7 +37,7 @@ if ! grep -Fq -- "$(awk '{print $2}' "$base/academy.pub")" "$auth"; then
 fi
 chown jamean:"$(id -gn jamean)" "$auth"
 chmod 600 "$auth"
-command -v restorecon >/dev/null && restorecon -RF "$home_dir/.ssh" /usr/local/libexec /etc/nerd-nova /var/lib/nerd-nova || true
+command -v restorecon >/dev/null && restorecon -F "$home_dir/.ssh" "$auth" /usr/local/libexec/nerd-nova-lab /usr/local/libexec/nerd-nova-gateway /etc/nerd-nova /etc/nerd-nova/target.json /var/lib/nerd-nova || true
 cat > /etc/systemd/system/nerd-nova-recovery.service <<'SERVICE'
 [Unit]
 Description=Nerd Nova isolated training lab recovery

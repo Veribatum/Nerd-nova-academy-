@@ -100,7 +100,7 @@ export const MISSIONS = [
 ];
 export const missionById = id => MISSIONS.find(m => m.id === id);
 export const RANKS = ['WATCHSTANDER', 'TECHNICIAN', 'SPECIALIST', 'SYSTEMS ENGINEER', 'WATCH CHIEF', 'NOVA ELITE'];
-export const rankFor = xp => Math.min(RANKS.length - 1, Math.floor(xp / 600));
+export const rankFor = xp => Math.min(RANKS.length - 1, Math.floor(xp / 500));
 export const GALLERY = [
   { id: 'office', title: 'After the watch', caption: 'Paperwork can wait a minute, Marine.', file: 'assets/nova-office.webp', unlock: 1 },
   { id: 'hangar', title: 'Hangar privileges', caption: 'Good work gets better rewards.', file: 'assets/nova-hangar.webp', unlock: 3 },
