@@ -62,6 +62,7 @@ export function achievements(progress) {
   if (events.some(e => e.noHints)) earned.add('COOL HEAD');
   if (events.some(e => e.skills.includes('Packets')) && events.some(e => e.skills.includes('Switching'))) earned.add('WIRE WHISPERER');
   if (new Set(events.flatMap(e => e.skills)).size >= 5) earned.add('ALL HANDS');
+  if (['nova-wifi', 'sylvanas-wifi', 'samus-wifi', 'jenny-wifi'].every(id => progress.completed.includes(id))) earned.add('CREW CONNECTION');
   return [...earned];
 }
 export class ProgressStore extends EventTarget {
@@ -113,7 +114,7 @@ export class ProgressStore extends EventTarget {
       }
     });
   }
-  finish(id, mission, mode, reward, skills, evidence, noHints) {
+  finish(id, mission, mode, reward, skills, evidence, noHints, newPhotos = []) {
     let awarded = 0;
     this.update(p => {
       const key = `${mission}:${mode}`;
@@ -122,7 +123,7 @@ export class ProgressStore extends EventTarget {
         p.rewards[key] = { mission, mode, xp: awarded, skills, at: now(), noHints, evidence };
       }
       p.completed = strings([...p.completed, mission]);
-      if (p.attempts[id]) { Object.assign(p.attempts[id], { outcome: 'success', evidence, updatedAt: now() }); delete p.attempts[id].snapshot; }
+      if (p.attempts[id]) { Object.assign(p.attempts[id], { outcome: 'success', evidence, xpAwarded: awarded, newPhotos, updatedAt: now() }); delete p.attempts[id].snapshot; }
       if (p.current?.attempt === id) p.current = { ...p.current, finished: true, updatedAt: now() };
     }); return awarded;
   }

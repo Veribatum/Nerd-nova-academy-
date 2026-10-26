@@ -1,12 +1,13 @@
 {
   "name": "nerd-nova-academy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "stamp": "node scripts/stamp-release.mjs"
   },
   "engines": { "node": ">=20" }
 }

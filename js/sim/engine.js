@@ -1,4 +1,5 @@
-import { missionById } from '../data/missions.js';
+import { missionById } from '../data/missions.js?v=1.1.0';
+import { isWifiMission, initialWifi, wifiCommand, wifiChecks, wifiEquipment } from './wifi.js?v=1.1.0';
 const clone = v => structuredClone(v);
 const low = s => s.toLowerCase().replace(/\s+/g, ' ').trim();
 export function createSimulation(id, seed = Date.now() % 65535) {
@@ -7,6 +8,7 @@ export function createSimulation(id, seed = Date.now() % 65535) {
     switchVlan: [30, 40][seed % 2], switchSaved: false, cliMode: 'exec', selectedInterface: '',
     gateway: seed % 2 ? '198.51.100.254' : '198.51.100.253', ovsAttached: false,
     permissions: '600', service: false, neighbor: '02:bb:00:00:00:99',
+    wifi: isWifiMission(id) ? initialWifi(id) : null,
     inspected: [], changes: 0, hints: 0, verified: false, tests: [], notes: '',
     log: [{ command: '', output: 'ACADEMY TRAINING ENVIRONMENT\nStateful simulation · no commands run on your computer.\nType help for this equipment’s commands, or inspect the topology.' }] };
 }
@@ -24,6 +26,7 @@ export function runCommand(state, raw) {
   else if (/[;&|`$<>\n\r]/.test(raw)) { output = 'This console accepts one supported command at a time. Shell scripts, pipes and redirection are not executed.'; }
   else if (c === 'clear') { s.log = []; return s; }
   else if (c === 'help' || c === '?') { output = `TRAINING CLI / ${missionById(s.id).title}\n${missionById(s.id).commands.join('\n')}\n\nCommands change this mission’s state. Use Verify repair when ready.\nFor a guided explanation, open the field manual or ask Nova for a hint.`; }
+  else if (isWifiMission(s.id)) output = wifiCommand(s, c);
   else if (['ip -br address', 'ip -br addr', 'ip addr', 'ip address', 'ip a', 'ip -br a', 'ip -br link', 'ip link'].includes(c)) {
     inspect(s, 'interface');
     output = s.id === 'rhel-link' ? `lo    UNKNOWN  127.0.0.1/8\nlab0  ${s.link ? 'UP  ' : 'DOWN'}     192.0.2.10/30` :
@@ -154,7 +157,7 @@ export function verifySimulation(state) {
     case 'arp':
       if (!s.neighbor) s.neighbor = '02:aa:10:42:00:01';
       checks = [['Neighbor resolves to replacement MAC', s.neighbor === '02:aa:10:42:00:01'], ['Camera replies', s.neighbor === '02:aa:10:42:00:01'], ['IP address and VLAN unchanged', true]]; break;
-    default: throw Error('Unknown mission verifier.');
+    default: if (isWifiMission(s.id)) checks = wifiChecks(s); else throw Error('Unknown mission verifier.');
   }
   s.verified = checks.every(c => c[1]); s.tests.push(...checks.map(([test, passed]) => ({ test, passed })));
   s.log.push({ command: 'VERIFY REPAIR', output: checks.map(([label, passed]) => `${passed ? 'PASS' : 'FAIL'}  ${label}`).join('\n') });
@@ -166,6 +169,7 @@ export function applyCamera(state, port, vlan) {
   s.log.push({ command: 'CAMERA CONTROL', output: `Destination UDP ${port}, access VLAN ${vlan} applied.` }); return s;
 }
 export function equipment(s) {
+  if (isWifiMission(s.id)) return wifiEquipment(s);
   const common = { id: 'control', name: 'Mission console', type: 'WORKSTATION', status: 'Powered', detail: 'Your diagnostic station. Use the briefing’s approved baseline and inspect the path in order.' };
   if (s.id === 'rhel-link') return [common,
     { id: 'node', name: 'Vehicle Node', type: 'RHEL / lab0', status: s.link ? 'UP' : 'DOWN', detail: `Isolated namespace: nn-academy\nlab0: ${s.link ? 'UP' : 'DOWN'}\n192.0.2.10/30\nManagement NICs are outside this topology.` },

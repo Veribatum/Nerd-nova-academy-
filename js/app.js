@@ -1,11 +1,12 @@
-import { ProgressStore, xpTotal } from './core/progress.js';
-import { CloudSync } from './core/sync.js';
-import { Companion, validVMReceipt } from './lab/companion.js';
-import { MISSIONS, missionById, GALLERY } from './data/missions.js';
-import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js';
-import { createPcap } from './sim/pcap.js';
-import * as screens from './ui/screens.js';
-import { h, icon, download, dateLabel } from './ui/utils.js';
+import { ProgressStore, xpTotal } from './core/progress.js?v=1.1.0';
+import { CloudSync } from './core/sync.js?v=1.1.0';
+import { Companion, validVMReceipt } from './lab/companion.js?v=1.1.0';
+import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.1.0';
+import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.1.0';
+import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.1.0';
+import { createPcap } from './sim/pcap.js?v=1.1.0';
+import * as screens from './ui/screens.js?v=1.1.0';
+import { h, icon, download, dateLabel } from './ui/utils.js?v=1.1.0';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
@@ -13,13 +14,13 @@ const sync = new CloudSync(store);
 const companion = new Companion();
 const ctx = { store, sync, companion, active: null, busy: false,
   ui: { page: 'watch', mission: '', filter: 'ALL', manualSearch: '', tool: 'terminal', node: 'control',
-    packet: 0, packetFilter: '', checks: null, awarded: null, dialog: '', photo: 0 } };
+    packet: 0, packetFilter: '', checks: null, awarded: null, dialog: '', photo: 0, crew: null, galleryCrew: 'all' } };
 let commandHistory = []; let historyPosition = 0; let toastTimer;
-const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['morale', 'Morale', 'photo'], ['record', 'Service record', 'shield']];
+const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['crew', 'The crew', 'radio'], ['record', 'Service record', 'shield']];
 
 function toast(message) { $('toast').textContent = message; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('visible'), 5000); }
 function shell() {
-  const page = ['briefing', 'mission', 'debrief'].includes(ctx.ui.page) ? 'operations' : ctx.ui.page;
+  const page = ['briefing', 'mission', 'debrief'].includes(ctx.ui.page) ? 'operations' : ctx.ui.page === 'morale' ? 'crew' : ctx.ui.page;
   $('navigation').innerHTML = nav.map(([id, label, glyph]) => `<a href="#/${id}" class="${id === page ? 'active' : ''}" ${id === page ? 'aria-current="page"' : ''}>${icon(glyph, 19)}<span>${label}</span></a>`).join('');
   updateSaveBeacon();
   const warning = $('storage-warning'); warning.hidden = !store.warning; warning.textContent = store.warning;
@@ -53,6 +54,7 @@ function render() {
     case 'debrief': html = ctx.active ? screens.debrief(ctx, m || MISSIONS[0]) : screens.record(ctx); break;
     case 'manual': html = screens.manual(ctx); break;
     case 'morale': html = screens.morale(ctx); break;
+    case 'crew': html = screens.crew(ctx, crewById(ctx.ui.crew)); break;
     case 'record': html = screens.record(ctx); break;
     default: html = screens.watchdesk(ctx);
   }
@@ -62,7 +64,8 @@ function render() {
 function route() {
   const parts = location.hash.replace(/^#\/?/, '').split('/');
   const page = parts[0] || 'watch'; const mission = missionById(parts[1]);
-  ctx.ui.page = ['watch', 'operations', 'briefing', 'mission', 'debrief', 'manual', 'morale', 'record'].includes(page) ? page : 'watch';
+  ctx.ui.page = ['watch', 'operations', 'briefing', 'mission', 'debrief', 'manual', 'morale', 'crew', 'record'].includes(page) ? page : 'watch';
+  ctx.ui.crew = page === 'crew' ? crewById(parts[1])?.id : null;
   ctx.ui.mission = mission?.id || '';
   if (['mission', 'debrief'].includes(ctx.ui.page)) {
     if (!ctx.active || ctx.active.mission !== mission?.id) ctx.active = mission ? loadActive(mission.id) : null;
@@ -85,10 +88,11 @@ function showDialog(kind) {
     html = `<div class="eyebrow">RECOVERY / LAST EIGHT LOCAL CHECKPOINTS</div><h2>Your safety copies.</h2><p>Restoring merges valid progress. Download any entry to retain its original bytes.</p><div class="backup-list">${backups.length ? backups.map((b, i) => `<div><span>${dateLabel(b.at)}</span><button class="button ghost" data-action="restore-backup" data-index="${i}">Merge</button><button class="text-link" data-action="download-backup" data-index="${i}">${icon('download', 17)} Download</button></div>`).join('') : '<p>No automatic backups yet. An earlier copy is retained whenever your saved record changes.</p>'}</div>`;
   }
   if (kind === 'photo') {
-    const unlocked = GALLERY.filter(g => store.data.completed.length >= g.unlock);
+    const unlocked = GALLERY.filter(g => photoUnlocked(g, store.data));
     const photo = unlocked[ctx.ui.photo]; if (!photo) return;
     $('dialog').classList.add('photo-dialog');
-    html = `<div class="eyebrow">NOVA’S READY ROOM / PHOTO ${ctx.ui.photo + 1} OF ${unlocked.length}</div><h2>${h(photo.title)}</h2><img class="full-photo" src="${photo.file}" alt="Nova — ${h(photo.title)}"><div class="photo-navigation"><button class="button ghost" data-action="photo-prev" aria-label="Previous photo">${icon('back', 18)}</button><p>${h(photo.caption)}</p><button class="button ghost" data-action="photo-next" aria-label="Next photo">${icon('arrow', 18)}</button></div>`;
+    const owner = crewById(photo.crew);
+    html = `<div class="eyebrow">${owner.name.toUpperCase()} / PRIVATE PHOTO ${ctx.ui.photo + 1} OF ${unlocked.length}</div><h2>${h(photo.title)}</h2><img class="full-photo" src="${photo.file}" alt="${owner.name} — ${h(photo.title)}"><div class="photo-navigation"><button class="button ghost" data-action="photo-prev" aria-label="Previous photo">${icon('back', 18)}</button><p>${h(photo.caption)}</p><button class="button ghost" data-action="photo-next" aria-label="Next photo">${icon('arrow', 18)}</button></div>`;
   }
   $('dialog-content').innerHTML = html; $('dialog-error').hidden = true;
   if (!$('dialog').open) $('dialog').showModal();
@@ -152,7 +156,9 @@ async function verify() {
     ctx.ui.checks = checks;
     if (!passed) { checkpoint({ outcome: 'active', lastCheckAt: new Date().toISOString() }); toast('Verification found an unresolved condition. Review the evidence.'); return; }
     const hints = active.mode === 'sim' ? active.snapshot.hints : active.hints;
-    const earned = store.finish(active.attempt, mission.id, active.mode, active.mode === 'vm' ? mission.vmXp : mission.xp, mission.skills, evidence, hints === 0);
+    const anticipated = { ...store.data, completed: [...new Set([...store.data.completed, mission.id])] };
+    const newPhotos = GALLERY.filter(g => photoUnlocked(g, anticipated) && !photoUnlocked(g, store.data)).map(g => g.id);
+    const earned = store.finish(active.attempt, mission.id, active.mode, active.mode === 'vm' ? mission.vmXp : mission.xp, mission.skills, evidence, hints === 0, newPhotos);
     active.finished = true; ctx.ui.awarded = earned; go(`debrief/${mission.id}`);
     // Hash navigation clears transient checks; the AAR also reads saved evidence.
   });
@@ -186,6 +192,7 @@ document.addEventListener('click', async event => {
     if (action === 'deploy-sim') return startSimulation(missionById(b.dataset.mission));
     if (action === 'deploy-vm') return startVM(missionById(b.dataset.mission));
     if (action === 'filter') { ctx.ui.filter = b.dataset.value; return render(); }
+    if (action === 'gallery-filter') { ctx.ui.galleryCrew = CREW.some(c => c.id === b.dataset.crew) ? b.dataset.crew : 'all'; return render(); }
     if (action === 'tool') { ctx.ui.tool = b.dataset.tool; render(); if (ctx.ui.tool === 'terminal') $('command-input')?.focus({ preventScroll: true }); return; }
     if (action === 'inspect') { ctx.ui.node = b.dataset.node; if (ctx.active?.snapshot) { const s = ctx.active.snapshot; if (!s.inspected.includes('topology')) s.inspected.push('topology'); checkpoint(); } return render(); }
     if (action === 'packet') { ctx.ui.packet = Number(b.dataset.packet); const s = ctx.active?.snapshot;
@@ -205,8 +212,8 @@ document.addEventListener('click', async event => {
     if (action === 'sync-now') return busy(async () => { await sync.synchronize(); showDialog('sync'); }, true);
     if (action === 'lock-cloud') { sync.lock(); return showDialog('sync'); }
     if (action === 'forget-cloud') { sync.forget(); return showDialog('sync'); }
-    if (action === 'open-photo') { const unlocked = GALLERY.filter(g => store.data.completed.length >= g.unlock); ctx.ui.photo = unlocked.findIndex(g => g.id === b.dataset.photo); return showDialog('photo'); }
-    if (action === 'photo-prev' || action === 'photo-next') { const count = GALLERY.filter(g => store.data.completed.length >= g.unlock).length;
+    if (action === 'open-photo') { const unlocked = GALLERY.filter(g => photoUnlocked(g, store.data)); ctx.ui.photo = unlocked.findIndex(g => g.id === b.dataset.photo); return showDialog('photo'); }
+    if (action === 'photo-prev' || action === 'photo-next') { const count = GALLERY.filter(g => photoUnlocked(g, store.data)).length;
       if (count) ctx.ui.photo = (ctx.ui.photo + (action === 'photo-next' ? 1 : -1) + count) % count; return showDialog('photo'); }
   } catch (e) { if ($('dialog').open) dialogError(e.message); else toast(e.message); }
 });
@@ -264,7 +271,7 @@ window.addEventListener('storage', event => {
   }
 });
 // Static import keeps this event handler synchronous and testable.
-import { mergeProgress as awaitImportMerge } from './core/progress.js';
+import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.1.0';
 function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase() + ' / ' + new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); }
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');

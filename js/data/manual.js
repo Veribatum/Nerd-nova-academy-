@@ -1,4 +1,13 @@
 export const MANUAL = [
+  { id: 'wifi', title: 'Crew Wi-Fi / Check the right connection', icon: 'radio',
+    lead: 'Association, addressing, name resolution and radio quality are separate observations. The four crew requests exercise each one.',
+    sections: [
+      ['Local radio and association', 'nmcli radio wifi\nrfkill list\nnmcli device status\nnmcli device wifi list', 'A disabled local radio can prevent scanning and association while the shared access point remains healthy.'],
+      ['Saved and active profiles', 'nmcli connection show --active\nnmcli connection show "Rapscallion Crew"\nnmcli device show wlp2s0', 'Connection names with spaces require quotes. A saved profile can differ from the settings currently applied to the interface.'],
+      ['IP versus name resolution', 'ping 203.0.113.25\ngetent hosts archive.rapscallion.test', 'If a working IP path and failed name lookup agree, inspect the resolver before changing routes or restarting the access point. The .test name and addresses here are fictional.'],
+      ['Applying a controlled change', 'sudo nmcli device reapply wlp2s0\nsudo nmcli connection up "Rapscallion Crew"', 'DNS can be reapplied to an active connection. A wireless band change requires reassociation. These are simulator exercises; the VirtualBox VM mission does not pretend its Ethernet adapters are Wi-Fi radios.'],
+      ['Link quality', 'iw dev wlp2s0 link\nping -c 5 192.0.2.1', 'Compare the actual band and signal with scan results and the approved local baseline, then repeat the same peer test after one justified change.']
+    ], url: 'https://networkmanager.pages.freedesktop.org/NetworkManager/NetworkManager/nmcli.html' },
   { id: 'rhel', title: 'RHEL / Read the machine', icon: 'terminal',
     lead: 'State, configuration and evidence are different things. Compare what is running with the approved baseline.',
     sections: [

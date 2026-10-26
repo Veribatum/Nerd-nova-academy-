@@ -10,7 +10,11 @@ const solve = {
   route: ['ip route get 203.0.113.20', 'sudo ip route replace 203.0.113.0/24 via 198.51.100.1 dev enp0s8'],
   'ovs-island': ['ip -br link', 'ovs-vsctl show', 'sudo ovs-vsctl add-port br-lab tap-sensor'],
   'service-watch': ['systemctl status telemetry', 'journalctl -u telemetry -n 20', 'ls -l /srv/academy/telemetry.cfg', 'sudo chmod 640 /srv/academy/telemetry.cfg', 'sudo systemctl restart telemetry'],
-  arp: ['ip neigh', 'sudo ip neigh del 10.0.0.42 dev eth0', 'ping 10.0.0.42']
+  arp: ['ip neigh', 'sudo ip neigh del 10.0.0.42 dev eth0', 'ping 10.0.0.42'],
+  'nova-wifi': ['nmcli device status', 'getent hosts archive.rapscallion.test', 'sudo nmcli connection modify "Rapscallion Crew" ipv4.dns 192.0.2.53', 'sudo nmcli device reapply wlp2s0'],
+  'sylvanas-wifi': ['nmcli radio wifi', 'rfkill list', 'nmcli radio wifi on'],
+  'samus-wifi': ['nmcli connection show --active', 'sudo nmcli connection up "Rapscallion Crew"'],
+  'jenny-wifi': ['nmcli device wifi list', 'iw dev wlp2s0 link', 'sudo nmcli connection modify "Rapscallion Crew" 802-11-wireless.band a', 'sudo nmcli connection up "Rapscallion Crew"']
 };
 for (const mission of MISSIONS) {
   test(`${mission.id}: fault fails, real repair sequence passes, checkpoint resumes`, () => {
@@ -24,6 +28,15 @@ for (const mission of MISSIONS) {
 }
 test('camera: a matching port does not excuse wrong VLAN', () => {
   assert.equal(verifySimulation(applyCamera(createSimulation('cam'), 5700, '20')).passed, false);
+});
+test('Wi-Fi saved DNS and band changes do not repair the live link until applied', () => {
+  let nova = runCommand(createSimulation('nova-wifi'), 'sudo nmcli connection modify "Rapscallion Crew" ipv4.dns 192.0.2.53');
+  assert.equal(verifySimulation(nova).passed, false);
+  nova = runCommand(nova, 'sudo nmcli device reapply wlp2s0'); assert.equal(verifySimulation(nova).passed, true);
+  let jenny = runCommand(createSimulation('jenny-wifi'), 'sudo nmcli connection modify "Rapscallion Crew" 802-11-wireless.band a');
+  assert.equal(verifySimulation(jenny).passed, false);
+  jenny = runCommand(jenny, 'sudo nmcli device reapply wlp2s0'); assert.equal(verifySimulation(jenny).passed, false);
+  jenny = runCommand(jenny, 'sudo nmcli connection up "Rapscallion Crew"'); assert.equal(verifySimulation(jenny).passed, true);
 });
 test('switch: configuration must be saved; wrong CLI context cannot apply it', () => {
   let state = runCommand(createSimulation('switch-watch'), 'switchport access vlan 20');

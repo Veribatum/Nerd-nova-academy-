@@ -1,14 +1,14 @@
 # Nerd Nova Academy
 
-**Your watch. Your ship.** A shipboard technical training game hosted directly on GitHub Pages. No build or paid AI API is required.
+**Your crew. Your ship.** Technical training aboard the independent spaceship **Rapscallion**, with **Nova, Sylvanas, Samus and Jenny** from Rum Island. A game hosted directly on GitHub Pages. No build or paid AI API is required.
 
 Live: https://veribatum.github.io/Nerd-nova-academy-/
 
 ## Play
 
-Report for duty, read Nova’s briefing, deploy a simulator, inspect the topology and diagnostics, make a controlled repair, and verify it. A successful verification produces an after-action report, XP, proficiency, decorations, and permanent morale-photo unlocks. Wrong repairs change the scenario and fail verification. Replays do not duplicate completion XP.
+Report for duty, read Nova’s briefing, deploy a simulator, inspect the topology and diagnostics, make a controlled repair, and verify it. A successful verification produces an after-action report from the assigned crew member, XP, proficiency, decorations, and permanent personal-photo unlocks. Meet the four women in The crew, take their requests, and view earned pictures in Private transmissions. Wrong repairs change the scenario and fail verification. Replays do not duplicate completion XP.
 
-Seven complete investigations ship with this release:
+Eleven complete investigations ship with this release. The four crew Wi-Fi requests each unlock that woman’s personal photo only after successful verification:
 
 | Operation | Investigation |
 | --- | --- |
@@ -19,6 +19,10 @@ Seven complete investigations ship with this release:
 | The Virtual Island | Open vSwitch bridge/port membership |
 | Permission to Fail | systemd logs, service account permissions, controlled restart |
 | Ghost in the Wire | ARP evidence, stale permanent neighbor, fresh resolution |
+| Nova’s Missing Names | Wi-Fi DNS failure; saved versus applied resolver |
+| Sylvanas Goes Silent | Disabled local wireless radio and autoconnection |
+| Samus on the Guest List | Wrong SSID/profile and the guest-network boundary |
+| Jenny’s Crowded Airwaves | Band restriction, scan/link evidence and reassociation |
 
 The browser terminal is explicitly a stateful simulation. It never forwards typed commands to the computer. The real VM mission uses your ordinary SSH terminal and independent VM-side verification.
 
@@ -68,7 +72,7 @@ bash -n lab/install-lab.sh lab/academy-gateway
 npm run dev
 ```
 
-No npm dependencies are required. GitHub Pages serves `main` / root, including ES modules and the optimized local WebP assets. Existing Pages settings need no change.
+No npm dependencies are required. Release updates run `npm run stamp` after changing the package version; it stamps the entire ES-module graph and stylesheet so cached older modules cannot mix with a new release. The progress key never changes for an art/content update. GitHub Pages serves `main` / root, including ES modules and the optimized local WebP assets. Existing Pages settings need no change.
 
 CI runs the gameplay, migration, encryption, conflict and reward-gate tests; Windows PowerShell 5.1 syntax, authorization and dispatch tests; and an actual Linux namespace lifecycle inside an isolated CI network/UTS/mount namespace. The Linux integration test does not run on the user’s VM. The user’s Windows → installed RHEL VM path and the user’s authenticated cloud account still need their first local enrollment/connection.
 

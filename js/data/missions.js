@@ -1,7 +1,8 @@
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.1.0';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
-    location: 'Boat deck / Vehicle support bay', watch: '0600 · Launch readiness',
+    location: 'Rapscallion / Shuttle support bay', watch: '0600 · Shuttle readiness',
     situation: 'A training vehicle passed its last check. After a maintenance handover, its peer test fails. Launch control needs the link restored before releasing the vehicle.',
     intel: ['The Vehicle Node and SSH management connection remain available.', 'The fault is confined to the isolated Academy network.', 'Approved baseline: lab0 is UP, 192.0.2.10/30; the peer is 192.0.2.9.'],
     orders: 'Locate the break, make the smallest justified change, and prove the vehicle can reach its peer.',
@@ -9,13 +10,13 @@ export const MISSIONS = [
     tools: ['RHEL terminal', 'iproute2', 'ping', 'Interactive topology', 'Namespace controller (desktop)'],
     objectives: ['Inspect interface state and addressing', 'Restore the approved link configuration', 'Verify three peer replies and preserve management access'],
     nova: 'Morning, Marine. The vehicle is giving us the silent treatment. I already tried looking disappointed. Your turn: inspect the link before you start rebuilding my ship.',
-    debrief: 'lab0 had been administratively disabled. An address can remain assigned to a DOWN interface. Bringing the correct interface UP restored its connected route and peer traffic. The management NICs were outside the training namespaces.',
+    debrief: 'lab0 had been administratively disabled. An address can remain assigned to a DOWN interface. Bringing the correct interface UP restored a usable connected route and peer traffic. The management NICs stayed outside the training namespaces.',
     lesson: 'Start with link state, then addressing, then reachability. Make one change and test the result.',
     hints: ['Compare the approved baseline with the actual state of lab0. An assigned address does not mean the interface is up.', 'Use ip -br address, then inspect lab0. Look for the administrative UP flag.', 'In the simulator: sudo ip link set lab0 up. In the VM: sudo ip -n nn-academy link set lab0 up. Then test the peer.'],
     commands: ['ip -br address', 'ip link show lab0', 'ip route', 'ping -c 3 192.0.2.9', 'sudo ip link set lab0 up'], vm: true },
   { id: 'cam', number: '02', title: 'The Silent Camera', short: 'Ping works. The picture doesn’t.',
     track: 'NETWORKS', skills: ['Networking', 'Packets'], level: 'Watchstander', minutes: '10–15', xp: 250,
-    location: 'Forward observation / Camera control station', watch: '0800 · Surveillance watch',
+    location: 'Rapscallion / Observation camera control', watch: '0800 · Surveillance watch',
     situation: 'The bridge can reach CAM-01, but the viewing console reports VIDEO TIMEOUT. An operator wants to replace the cable. You have permission to inspect the stream path first.',
     intel: ['Both endpoints are approved for VLAN 10.', 'The viewer is 10.0.0.20/24; CAM-01 is 10.0.0.42/24.', 'There is no router between these local endpoints.'],
     orders: 'Trace the intended UDP flow, compare sender and receiver settings, and restore video without disrupting the working LAN.',
@@ -29,7 +30,7 @@ export const MISSIONS = [
     commands: ['ping 10.0.0.42', 'ip neigh', 'ss -uln', 'show camera', 'camera set destination-port 5700'] },
   { id: 'switch-watch', number: '03', title: 'Wrong Side of the Wire', short: 'Link lights are lying by omission.',
     track: 'SWITCHING', skills: ['Switching', 'Networking'], level: 'Technician', minutes: '12–18', xp: 350,
-    location: 'Communications rack / Access switch SW-1', watch: '1000 · Equipment handover',
+    location: 'Rapscallion / Crew communications rack', watch: '1000 · Equipment handover',
     situation: 'A console moved to a spare switch port. Link lights are green, but the console cannot reach the local control station. A neighboring station on the same switch is healthy.',
     intel: ['The console and control station use 198.51.100.0/24.', 'The approved mission LAN is access VLAN 20.', 'The affected port is identified in the equipment inspector.'],
     orders: 'Inspect link counters and switchport membership, correct the affected access port, and save the working configuration.',
@@ -43,9 +44,9 @@ export const MISSIONS = [
     commands: ['show interfaces gigabitEthernet 0/7', 'show vlan brief', 'show interfaces gigabitEthernet 0/7 switchport', 'configure terminal', 'interface gigabitEthernet 0/7', 'switchport access vlan 20', 'end', 'write memory', 'ping 198.51.100.20'] },
   { id: 'route', number: '04', title: 'Route to Nowhere', short: 'Local traffic is fine. Shore isn’t.',
     track: 'RHEL', skills: ['Linux', 'Networking'], level: 'Technician', minutes: '12–18', xp: 350,
-    location: 'Ship operations / Shore relay console', watch: '1200 · Relay verification',
-    situation: 'Local console traffic works, but a test service at the fictional shore relay never responds. The node has more than one route; a blanket default-route change would affect other traffic.',
-    intel: ['Local interface: enp0s8, 198.51.100.10/24.', 'Approved shore gateway: 198.51.100.1.', 'Shore test target: 203.0.113.20 in 203.0.113.0/24.'],
+    location: 'Rapscallion / Surface relay console', watch: '1200 · Relay verification',
+    situation: 'Local console traffic works, but a test service at the fictional surface relay never responds. The node has more than one route; a blanket default-route change would affect other traffic.',
+    intel: ['Local interface: enp0s8, 198.51.100.10/24.', 'Approved surface-relay gateway: 198.51.100.1.', 'Surface-relay test target: 203.0.113.20 in 203.0.113.0/24.'],
     orders: 'Inspect the route actually selected for the shore target. Repair only the incorrect specific route and verify the local and remote paths.',
     parameters: 'One static-route fault · keep the default route · fictional documentation addresses',
     tools: ['Linux routing table', 'ip route get', 'ping', 'Topology inspector'],
@@ -57,7 +58,7 @@ export const MISSIONS = [
     commands: ['ip -br address', 'ip route', 'ip route get 203.0.113.20', 'ping 198.51.100.1', 'sudo ip route replace 203.0.113.0/24 via 198.51.100.1 dev enp0s8', 'ping 203.0.113.20'] },
   { id: 'ovs-island', number: '05', title: 'The Virtual Island', short: 'The VM exists. Its network doesn’t.',
     track: 'OPEN vSWITCH', skills: ['Virtualization', 'Linux', 'Switching'], level: 'Specialist', minutes: '12–18', xp: 400,
-    location: 'Virtualization bay / Sensor simulation host', watch: '1400 · Lab restoration',
+    location: 'Rapscallion / Virtualization and sensor bay', watch: '1400 · Lab restoration',
     situation: 'A synthetic sensor VM is powered on and its tap interface exists. Following a lab rebuild, it cannot reach its console. The physical management network is healthy.',
     intel: ['Approved virtual bridge: br-lab.', 'Expected ports: vnet-console and tap-sensor.', 'Management uses a separate bridge and is outside this repair.'],
     orders: 'Compare host interfaces with OVS bridge membership. Restore the missing attachment and prove the two lab endpoints communicate.',
@@ -71,7 +72,7 @@ export const MISSIONS = [
     commands: ['ip -br link', 'ovs-vsctl show', 'ovs-vsctl list-br', 'ovs-vsctl list-ports br-lab', 'sudo ovs-vsctl add-port br-lab tap-sensor', 'ping 192.0.2.42'] },
   { id: 'service-watch', number: '06', title: 'Permission to Fail', short: 'The daemon is down for a reason.',
     track: 'RHEL', skills: ['Linux', 'Services'], level: 'Specialist', minutes: '15–20', xp: 400,
-    location: 'Engineering / Telemetry collection station', watch: '1600 · Maintenance closeout',
+    location: 'Rapscallion / Engineering telemetry station', watch: '1600 · Maintenance closeout',
     situation: 'The telemetry collector failed after a configuration-file update. Network reachability is normal. Restarting the service repeatedly has not helped.',
     intel: ['Service name: telemetry; service account and group: telemetry.', 'Config: /srv/academy/telemetry.cfg.', 'Approved permissions: root:telemetry with mode 640.'],
     orders: 'Read the failure evidence, repair the configuration access without making it world-readable, then restart and verify the service.',
@@ -85,7 +86,7 @@ export const MISSIONS = [
     commands: ['systemctl status telemetry', 'journalctl -u telemetry -n 20', 'ls -l /srv/academy/telemetry.cfg', 'id telemetry', 'sudo chmod 640 /srv/academy/telemetry.cfg', 'sudo systemctl restart telemetry', 'ss -tuln'] },
   { id: 'arp', number: '07', title: 'Ghost in the Wire', short: 'Right IP. Wrong Ethernet destination.',
     track: 'PACKET ANALYSIS', skills: ['Packets', 'Networking', 'Linux'], level: 'Specialist', minutes: '12–18', xp: 350,
-    location: 'Shore workshop / Replacement camera test bench', watch: '1800 · Equipment acceptance',
+    location: 'Rapscallion / Replacement camera bench', watch: '1800 · Equipment acceptance',
     situation: 'CAM-01 was replaced without changing its IPv4 address. The viewer still cannot reach it. A capture from another station shows the new camera answering ARP.',
     intel: ['CAM-01 remains 10.0.0.42/24; viewer is 10.0.0.20/24.', 'The replacement camera MAC is 02:aa:10:42:00:01.', 'A stale static neighbor entry may survive a device swap.'],
     orders: 'Compare packet evidence with the viewer’s neighbor table, repair the stale mapping, and verify fresh resolution and connectivity.',
@@ -96,15 +97,29 @@ export const MISSIONS = [
     debrief: 'A permanent neighbor entry retained the old camera’s MAC address. Deleting that single entry allowed ARP to learn the replacement’s MAC. Fresh traffic then reached the intended device.',
     lesson: 'IPv4 addresses and Ethernet addresses are distinct. A stale mapping can misdirect traffic on an otherwise healthy LAN.',
     hints: ['Inspect the ARP reply and compare its sender MAC with ip neigh.', 'The obsolete entry is PERMANENT. Let the host learn the replacement.', 'sudo ip neigh del 10.0.0.42 dev eth0, then ping the camera and inspect ip neigh again.'],
-    commands: ['ip neigh', 'ping 10.0.0.42', 'sudo ip neigh del 10.0.0.42 dev eth0', 'ping -c 3 10.0.0.42', 'ip neigh'] }
+    commands: ['ip neigh', 'ping 10.0.0.42', 'sudo ip neigh del 10.0.0.42 dev eth0', 'ping -c 3 10.0.0.42', 'ip neigh'] },
+  ...WIFI_MISSIONS
 ];
+const owners = { 'rhel-link': 'nova', cam: 'nova', 'switch-watch': 'sylvanas', route: 'samus', 'ovs-island': 'jenny', 'service-watch': 'jenny', arp: 'sylvanas' };
+const voices = {
+  'switch-watch': 'Green lights. No useful traffic. A charmingly incomplete picture. Inspect my switchport, Captain. Precision is considerably more attractive than random configuration changes.',
+  route: 'My flight-data relay times out while local traffic works. Ask the route table where it sends the packet. Fix that path and we can discuss your reward.',
+  'ovs-island': 'The guest is running. The tap exists. Neither observation proves bridge membership. Let us test the missing attachment before Nova reboots something innocent.',
+  'service-watch': 'The service has already logged its objection. Read the journal, inspect the account and permissions, then repair the cause. My appreciation will be considerably less formal.',
+  arp: 'A new camera with the old address. The console appears attached to a memory. Compare the actual MAC evidence, Captain. Nostalgia is not a network protocol.'
+};
+for (const mission of MISSIONS) { mission.crew ||= owners[mission.id] || 'nova'; if (voices[mission.id]) mission.nova = voices[mission.id]; }
 export const missionById = id => MISSIONS.find(m => m.id === id);
 export const RANKS = ['WATCHSTANDER', 'TECHNICIAN', 'SPECIALIST', 'SYSTEMS ENGINEER', 'WATCH CHIEF', 'NOVA ELITE'];
 export const rankFor = xp => Math.min(RANKS.length - 1, Math.floor(xp / 500));
 export const GALLERY = [
-  { id: 'office', title: 'After the watch', caption: 'Paperwork can wait a minute, Marine.', file: 'assets/nova-office.webp', unlock: 1 },
-  { id: 'hangar', title: 'Hangar privileges', caption: 'Good work gets better rewards.', file: 'assets/nova-hangar.webp', unlock: 3 },
-  { id: 'ready-room', title: 'Off the clock', caption: 'The ship is running. Now you have my attention.', file: 'assets/nova-ready-room.webp', unlock: 5 }
+  { id: 'office', crew: 'nova', title: 'After the watch', caption: 'Paperwork can wait a minute, Marine.', file: 'assets/nova-office.webp', unlock: 1 },
+  { id: 'hangar', crew: 'nova', title: 'Hangar privileges', caption: 'Good work gets better rewards.', file: 'assets/nova-hangar.webp', unlock: 3 },
+  { id: 'ready-room', crew: 'nova', title: 'Off the clock', caption: 'The ship is running. Now you have my attention.', file: 'assets/nova-ready-room.webp', unlock: 5 },
+  { id: 'nova-wifi-photo', crew: 'nova', title: 'Signal received, Marine', caption: 'You fixed my Wi-Fi. I promised you a personal transmission.', file: 'assets/nova-wifi-reward.webp', mission: 'nova-wifi' },
+  { id: 'sylvanas-wifi-photo', crew: 'sylvanas', title: 'A precise reward', caption: 'An elegant solution deserves a little appreciation, Captain.', file: 'assets/sylvanas-wifi-reward.webp', mission: 'sylvanas-wifi' },
+  { id: 'samus-wifi-photo', crew: 'samus', title: 'Off-contract transmission', caption: 'Contract uploaded. Now you have my attention.', file: 'assets/samus-wifi-reward.webp', mission: 'samus-wifi' },
+  { id: 'jenny-wifi-photo', crew: 'jenny', title: 'Positive reinforcement', caption: 'Verified improvement. Personalized reward. A highly effective feedback loop.', file: 'assets/jenny-wifi-reward.webp', mission: 'jenny-wifi' }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],
@@ -112,5 +127,6 @@ export const MEDALS = [
   ['T.I.T.S.', 'Tactical Interface Troubleshooting Specialist', 'Clear three distinct missions. Nova chose the acronym.'],
   ['TRUST BUT VERIFY', 'Trust, but Verify', 'Pass an actual VM-backed repair check.'],
   ['WIRE WHISPERER', 'Wire Whisperer', 'Clear packet analysis and switching operations.'],
-  ['ALL HANDS', 'All Hands', 'Practice five technical disciplines.']
+  ['ALL HANDS', 'All Hands', 'Practice five technical disciplines.'],
+  ['CREW CONNECTION', 'Crew Connection', 'Verify all four crew Wi-Fi repairs. Four personal transmissions earned.']
 ];
