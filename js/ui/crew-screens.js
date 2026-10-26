@@ -1,6 +1,6 @@
-import { CREW, crewById, photoUnlocked } from '../data/crew.js?v=1.1.0';
-import { MISSIONS, GALLERY } from '../data/missions.js?v=1.1.0';
-import { h, icon } from './utils.js?v=1.1.0';
+import { CREW, crewById, photoUnlocked } from '../data/crew.js?v=1.1.1';
+import { MISSIONS, GALLERY } from '../data/missions.js?v=1.1.1';
+import { h, icon } from './utils.js?v=1.1.1';
 
 export function crewRoster(ctx) {
   return `<div class="section-head"><div><div class="eyebrow">RAPSCALLION / PERSONAL TROUBLE TICKETS</div><h2>Same crew. Better signal.</h2></div><a class="text-link" href="#/crew">Meet the crew ${icon('arrow', 17)}</a></div><div class="crew-roster">${CREW.map(c => {

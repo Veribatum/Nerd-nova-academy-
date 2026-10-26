@@ -1,5 +1,5 @@
-import { missionById } from '../data/missions.js?v=1.1.0';
-import { isWifiMission, initialWifi, wifiCommand, wifiChecks, wifiEquipment } from './wifi.js?v=1.1.0';
+import { missionById } from '../data/missions.js?v=1.1.1';
+import { isWifiMission, initialWifi, wifiCommand, wifiChecks, wifiEquipment } from './wifi.js?v=1.1.1';
 const clone = v => structuredClone(v);
 const low = s => s.toLowerCase().replace(/\s+/g, ' ').trim();
 export function createSimulation(id, seed = Date.now() % 65535) {

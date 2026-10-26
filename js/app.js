@@ -1,12 +1,12 @@
-import { ProgressStore, xpTotal } from './core/progress.js?v=1.1.0';
-import { CloudSync } from './core/sync.js?v=1.1.0';
-import { Companion, validVMReceipt } from './lab/companion.js?v=1.1.0';
-import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.1.0';
-import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.1.0';
-import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.1.0';
-import { createPcap } from './sim/pcap.js?v=1.1.0';
-import * as screens from './ui/screens.js?v=1.1.0';
-import { h, icon, download, dateLabel } from './ui/utils.js?v=1.1.0';
+import { ProgressStore, xpTotal } from './core/progress.js?v=1.1.1';
+import { CloudSync } from './core/sync.js?v=1.1.1';
+import { Companion, validVMReceipt } from './lab/companion.js?v=1.1.1';
+import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.1.1';
+import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.1.1';
+import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.1.1';
+import { createPcap } from './sim/pcap.js?v=1.1.1';
+import * as screens from './ui/screens.js?v=1.1.1';
+import { h, icon, download, dateLabel } from './ui/utils.js?v=1.1.1';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
@@ -18,7 +18,7 @@ const ctx = { store, sync, companion, active: null, busy: false,
 let commandHistory = []; let historyPosition = 0; let toastTimer;
 const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['crew', 'The crew', 'radio'], ['record', 'Service record', 'shield']];
 
-function toast(message) { $('toast').textContent = message; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('visible'), 5000); }
+function toast(message) { $('toast').textContent = message; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').classList.remove('visible'); $('toast').textContent = ''; }, 5000); }
 function shell() {
   const page = ['briefing', 'mission', 'debrief'].includes(ctx.ui.page) ? 'operations' : ctx.ui.page === 'morale' ? 'crew' : ctx.ui.page;
   $('navigation').innerHTML = nav.map(([id, label, glyph]) => `<a href="#/${id}" class="${id === page ? 'active' : ''}" ${id === page ? 'aria-current="page"' : ''}>${icon(glyph, 19)}<span>${label}</span></a>`).join('');
@@ -159,7 +159,7 @@ async function verify() {
     const anticipated = { ...store.data, completed: [...new Set([...store.data.completed, mission.id])] };
     const newPhotos = GALLERY.filter(g => photoUnlocked(g, anticipated) && !photoUnlocked(g, store.data)).map(g => g.id);
     const earned = store.finish(active.attempt, mission.id, active.mode, active.mode === 'vm' ? mission.vmXp : mission.xp, mission.skills, evidence, hints === 0, newPhotos);
-    active.finished = true; ctx.ui.awarded = earned; go(`debrief/${mission.id}`);
+    active.finished = true; ctx.ui.awarded = earned; go(`debrief/${mission.id}`); toast('Repair verified. Your service record is saved.');
     // Hash navigation clears transient checks; the AAR also reads saved evidence.
   });
 }
@@ -271,7 +271,7 @@ window.addEventListener('storage', event => {
   }
 });
 // Static import keeps this event handler synchronous and testable.
-import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.1.0';
+import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.1.1';
 function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase() + ' / ' + new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); }
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');
