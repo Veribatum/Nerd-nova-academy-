@@ -1,0 +1,32 @@
+name: Academy checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  game-and-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+      - run: npm run check
+      - run: python3 -m py_compile lab/academy-lab.py
+      - run: bash -n lab/install-lab.sh lab/academy-gateway
+      - name: Actual isolated Linux mission lifecycle
+        run: sudo unshare --mount --uts --net --pid --fork --mount-proc bash tests/lab-integration.sh
+  windows-companion:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PowerShell 5.1 syntax and route security
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Get-ChildItem companion/*.ps1 | ForEach-Object {
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$errors)
+            if ($errors.Count) { throw ($errors | Out-String) }
+          }
+          .\tests\companion-security.ps1

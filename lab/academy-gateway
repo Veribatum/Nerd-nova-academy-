@@ -1,0 +1,11 @@
+#!/bin/bash
+# Forced-command SSH gateway. No eval, shell expansion, or arbitrary arguments.
+set -eu
+case "${SSH_ORIGINAL_COMMAND:-}" in
+  'academy status') op=status ;;
+  'academy deploy') op=deploy ;;
+  'academy verify') op=verify ;;
+  'academy reset') op=reset ;;
+  *) printf '%s\n' '{"error":"Operation not authorized","verified":false}'; exit 1 ;;
+esac
+exec /usr/bin/sudo -n /usr/local/libexec/nerd-nova-lab "$op"
