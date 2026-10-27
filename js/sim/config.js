@@ -125,9 +125,9 @@ export function editConfig(state, action, value = '') {
   const s = structuredClone(state), f=s.config, e=f?.editor;
   if (!e) return s;
   if (action === 'input' && e.mode === 'insert') { e.buffer=String(value).slice(0,12000); e.message='INSERT: edit the text, then press Escape.'; }
-  if (action === 'insert' && e.mode !== 'insert') { e.beforeInsert=e.buffer; e.mode='insert'; e.message='INSERT: ordinary text editing is enabled. Escape returns to normal mode.'; }
+  if (action === 'insert' && e.mode !== 'insert') { e.beforeInsert=e.buffer; e.canUndo=true; e.mode='insert'; e.message='INSERT: ordinary text editing is enabled. Escape returns to normal mode.'; }
   if (action === 'normal') { e.mode='normal'; e.message='NORMAL: :w writes, :wq writes and quits, :q! discards unsaved edits, u undoes the last Insert session.'; }
-  if (action === 'undo' && e.mode === 'normal') { [e.buffer,e.beforeInsert]=[e.beforeInsert,e.buffer]; e.message='Last Insert session undone/redone.'; }
+  if (action === 'undo' && e.mode === 'normal') { if (e.canUndo) { e.buffer=e.beforeInsert; e.canUndo=false; e.message='Last Insert session undone. This trainer keeps one undo step.'; } else e.message='No earlier undo step in this limited trainer.'; }
   if (action === 'ex' && e.mode === 'normal') {
     const cmd=String(value).trim();
     if ([':w',':wq',':x'].includes(cmd)) {

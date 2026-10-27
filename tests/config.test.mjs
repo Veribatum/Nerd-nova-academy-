@@ -16,7 +16,8 @@ test('Vim mode, readonly failure, E37 and discard preserve disk while a partial 
 test('Vim write persists independently of quit and later discard; undo works on an Insert session',()=>{
   let s=runCommand(createSimulation('config-hosts'),'sudo vim /etc/hosts');
   s=editConfig(s,'insert'); s=editConfig(s,'input','first'); s=editConfig(s,'normal'); s=editConfig(s,'undo'); assert.match(s.config.editor.buffer,/127.0.0.1/);
-  s=editConfig(s,'undo'); assert.equal(s.config.editor.buffer,'first'); s=editConfig(s,'ex',':w'); assert.equal(s.config.disk,'first');
+  s=editConfig(s,'undo'); assert.match(s.config.editor.buffer,/127.0.0.1/);
+  s=editConfig(s,'insert'); s=editConfig(s,'input','first'); s=editConfig(s,'normal'); s=editConfig(s,'ex',':w'); assert.equal(s.config.disk,'first');
   s=editConfig(s,'insert'); s=editConfig(s,'input','second'); s=editConfig(s,'normal'); s=editConfig(s,'ex',':q!'); assert.equal(s.config.disk,'first');
 });
 test('a corrected hosts entry still fails without an original backup, diff or preserved localhost',()=>{
