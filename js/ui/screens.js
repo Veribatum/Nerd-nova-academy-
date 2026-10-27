@@ -1,11 +1,13 @@
-import { CREW, crewForMission, photoUnlocked } from '../data/crew.js?v=1.1.1';
-import { crewRoster, crewDeck } from './crew-screens.js?v=1.1.1';
-import { isWifiMission, wifiChecks } from '../sim/wifi.js?v=1.1.1';
-import { MISSIONS, missionById, GALLERY, RANKS, rankFor, MEDALS } from '../data/missions.js?v=1.1.1';
-import { MANUAL } from '../data/manual.js?v=1.1.1';
-import { xpTotal, achievements } from '../core/progress.js?v=1.1.1';
-import { equipment, prompt, packetRows, filterPackets } from '../sim/engine.js?v=1.1.1';
-import { h, icon, button, dateLabel } from './utils.js?v=1.1.1';
+import { isConfigMission, configChecks } from '../sim/config.js?v=1.2.0';
+import { configEditor } from './config-editor.js?v=1.2.0';
+import { CREW, crewForMission, photoUnlocked } from '../data/crew.js?v=1.2.0';
+import { crewRoster, crewDeck } from './crew-screens.js?v=1.2.0';
+import { isWifiMission, wifiChecks } from '../sim/wifi.js?v=1.2.0';
+import { MISSIONS, missionById, GALLERY, RANKS, rankFor, MEDALS } from '../data/missions.js?v=1.2.0';
+import { MANUAL } from '../data/manual.js?v=1.2.0';
+import { xpTotal, achievements } from '../core/progress.js?v=1.2.0';
+import { equipment, prompt, packetRows, filterPackets } from '../sim/engine.js?v=1.2.0';
+import { h, icon, button, dateLabel } from './utils.js?v=1.2.0';
 const tag = (text, klass = '') => `<span class="tag ${klass}">${h(text)}</span>`;
 const sectionHead = (eyebrow, title, extra = '') => `<div class="section-head"><div><div class="eyebrow">${h(eyebrow)}</div><h2>${h(title)}</h2></div>${extra}</div>`;
 const briefLink = m => `href="#/briefing/${m.id}"`;
@@ -39,12 +41,13 @@ export function briefing(ctx, m) {
   return `<a class="back-link" href="#/operations">${icon('back', 16)} Watch rotation</a><div class="briefing-grid"><section class="brief-main"><div class="eyebrow">INCOMING TASKING / OPERATION ${m.number}</div><h1>${h(m.title)}<span class="accent">.</span></h1><p class="lead">${h(m.short)}</p><div class="tags">${tag(m.track)}${tag(m.level)}${tag(`${m.minutes} MIN`)}${tag(`+${m.xp} XP`, 'gold')}</div><div class="brief-location">${icon('compass', 19)}<div><b>${h(m.location)}</b><span>${h(m.watch)}</span></div></div><div class="brief-section"><span class="section-index">01</span><div><h2>Situation</h2><p>${h(m.situation)}</p></div></div><div class="brief-section"><span class="section-index">02</span><div><h2>Known intelligence</h2><ul class="intel-list">${m.intel.map(v => `<li>${h(v)}</li>`).join('')}</ul></div></div><div class="brief-section"><span class="section-index">03</span><div><h2>Your orders</h2><p>${h(m.orders)}</p><div class="objectives">${m.objectives.map((v, i) => `<div><span>${i + 1}</span>${h(v)}</div>`).join('')}</div></div></div><div class="brief-section"><span class="section-index">04</span><div><h2>Authorized tools</h2><div class="tags">${m.tools.map(t => tag(t)).join('')}</div><p class="small muted">${h(m.parameters)}</p></div></div><div class="deployment"><div class="eyebrow">ACKNOWLEDGE ORDERS / SELECT ENVIRONMENT</div><div class="deploy-options"><button class="button primary" data-action="deploy-sim" data-mission="${m.id}">${icon('terminal', 18)} ${resume && current.mode === 'sim' ? 'Resume simulator' : 'Deploy simulator'} ${icon('arrow', 17)}</button>${m.vm ? `<button class="button secondary" data-action="deploy-vm" data-mission="${m.id}">${icon('network', 18)} ${resume && current.mode === 'vm' ? 'Resume real VM' : 'Deploy real VM'}</button>` : ''}</div><p class="small muted">${m.vm ? `The real mission uses only nn-academy and nn-peer inside nova-academy. Requires the enrolled Windows companion. VM verification earns a separate ${m.vmXp} XP.` : 'Stateful browser simulation. Works on phone and desktop. No local tools required.'}</p></div></section><aside class="brief-nova"><div class="portrait-frame"><img src="${crew.portrait}" alt="${crew.name} giving your mission briefing" width="1122" height="1402"><span class="photo-code">${crew.name.toUpperCase()} / RAPSCALLION</span></div><div class="brief-dialogue"><div class="eyebrow"><span class="live-dot"></span> PERSONAL COMMS</div><blockquote>“${h(m.nova)}”</blockquote><span class="signature">— ${crew.name}</span></div></aside></div>`;
 }
 function missionObjectives(m, s, mode, checks) {
-  const repaired = s && (isWifiMission(s.id) ? wifiChecks(s).every(v => v[1]) : ({ 'rhel-link': s.link, cam: s.cameraPort === 5700 && s.vlan === '10', 'switch-watch': s.switchVlan === 20,
+  const repaired = s && (isConfigMission(s.id) ? configChecks(s).every(v => v[1]) : isWifiMission(s.id) ? wifiChecks(s).every(v => v[1]) : ({ 'rhel-link': s.link, cam: s.cameraPort === 5700 && s.vlan === '10', 'switch-watch': s.switchVlan === 20,
     route: s.gateway === '198.51.100.1', 'ovs-island': s.ovsAttached, 'service-watch': s.permissions === '640' && s.service, arp: s.neighbor === '02:aa:10:42:00:01' })[m.id]);
   const done = mode === 'vm' ? [!!checks, !!checks && checks.every(c => c[1]), !!checks && checks.every(c => c[1])] : [s?.inspected.length > 0, repaired, s?.verified];
   return `<div class="checklist">${m.objectives.map((o, i) => `<div class="${done[i] ? 'done' : ''}"><span>${done[i] ? icon('check', 13) : String(i + 1).padStart(2, '0')}</span><p>${h(o)}</p></div>`).join('')}</div>`;
 }
 function terminalView(s) {
+  if (s.config?.editor) return configEditor(s);
   return `<div class="console-header"><div><span class="live-dot"></span> ${s.id === 'switch-watch' ? 'SW-1 / CISCO-STYLE CLI' : 'ACADEMY / SYNTHETIC RHEL CONSOLE'}</div><span>STATEFUL SIMULATOR</span></div><div class="terminal-output" id="terminal-output" tabindex="0" aria-label="Terminal history">${s.log.map(row => `<div class="terminal-entry">${row.command ? `<div class="terminal-command"><span>${h(prompt(s))}</span> ${h(row.command)}</div>` : ''}<pre>${h(row.output)}</pre></div>`).join('')}</div><form id="command-form" class="command-line"><label for="command-input">${h(prompt(s))}</label><input id="command-input" name="command" aria-label="Training terminal command" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Type a command, or help"><button aria-label="Run command" type="submit">${icon('arrow', 20)}</button></form><div class="terminal-hints">ONE COMMAND AT A TIME <span>↑ ↓ command history</span><button class="text-link" data-action="insert-command" data-command="help">Command reference</button></div>`;
 }
 function mapView(ctx, s) {

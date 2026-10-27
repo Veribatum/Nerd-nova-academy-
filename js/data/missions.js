@@ -1,4 +1,5 @@
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.1.1';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.2.0';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.2.0';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -98,7 +99,8 @@ export const MISSIONS = [
     lesson: 'IPv4 addresses and Ethernet addresses are distinct. A stale mapping can misdirect traffic on an otherwise healthy LAN.',
     hints: ['Inspect the ARP reply and compare its sender MAC with ip neigh.', 'The obsolete entry is PERMANENT. Let the host learn the replacement.', 'sudo ip neigh del 10.0.0.42 dev eth0, then ping the camera and inspect ip neigh again.'],
     commands: ['ip neigh', 'ping 10.0.0.42', 'sudo ip neigh del 10.0.0.42 dev eth0', 'ping -c 3 10.0.0.42', 'ip neigh'] },
-  ...WIFI_MISSIONS
+  ...WIFI_MISSIONS,
+  ...CONFIG_MISSIONS
 ];
 const owners = { 'rhel-link': 'nova', cam: 'nova', 'switch-watch': 'sylvanas', route: 'samus', 'ovs-island': 'jenny', 'service-watch': 'jenny', arp: 'sylvanas' };
 const voices = {

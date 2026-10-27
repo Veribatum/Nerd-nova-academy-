@@ -1,4 +1,13 @@
 export const MANUAL = [
+  { id:'vim', title:'Vim / Change the right file', icon:'terminal',
+    lead:'First identify what the file controls. Back up, edit one setting, inspect the diff, apply only where required and verify behavior.',
+    sections:[
+      ['Know the consumer', '/etc/hosts\n/etc/NetworkManager/system-connections/*.nmconnection\n/etc/rapscallion/relay.conf', 'Hosts files map names to addresses. A NetworkManager keyfile configures a connection. The relay file is a fictional application endpoint, not a standard RHEL file. Knowing Vim does not identify which setting should change.'],
+      ['Backup and compare', 'sudo cp /etc/hosts /etc/hosts.bak\nsudo vim /etc/hosts\nsudo diff -u /etc/hosts.bak /etc/hosts', 'Take the backup before changing anything. Diff exit status 1 normally means the files differ; it is not automatically a failed repair. Inspect what changed. Academy models one original .bak; real work may need a timestamped backup to retain earlier versions.'],
+      ['Modes and exact keys', 'i → type your edit → Escape → :wq → Enter\nEscape → :q! → Enter', 'i enters Insert mode. Escape returns to Normal. Type the colon as part of :wq. :w writes; :wq writes and quits; :q! discards only edits since the last write. u in Normal mode undoes a change. The browser trainer models these basics with a normal text area during Insert; the real VM has full Vim.'],
+      ['RHEL 9 keyfile lifecycle', 'sudo nmcli connection reload\nnmcli connection show "Academy Link"\nsudo nmcli connection up "Academy Link"\nip -br address', 'RHEL 9 normally uses keyfiles; older installations can still have legacy ifcfg profiles. Root owns keyfiles and mode 600 restricts access. A manual edit needs loading before activation. Loading alone does not update the active device. Activation can interrupt its link; the Academy simulator uses only fictional lab0.'],
+      ['Verify the right outcome', 'getent hosts relay.rapscallion.test\nping -c 3 relay.rapscallion.test\nsystemctl status relay-watch\njournalctl -u relay-watch -n 20', 'getent follows the system lookup configuration; dig queries DNS instead of the local hosts file. Check the interface after profile changes and application logs after service changes. Restore the backup and reapply if the result is wrong.']
+    ],url:'https://vimhelp.org/usr_02.txt.html'},
   { id: 'wifi', title: 'Crew Wi-Fi / Check the right connection', icon: 'radio',
     lead: 'Association, addressing, name resolution and radio quality are separate observations. The four crew requests exercise each one.',
     sections: [

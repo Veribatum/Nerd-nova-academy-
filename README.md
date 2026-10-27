@@ -8,7 +8,7 @@ Live: https://veribatum.github.io/Nerd-nova-academy-/
 
 Report for duty, read Nova’s briefing, deploy a simulator, inspect the topology and diagnostics, make a controlled repair, and verify it. A successful verification produces an after-action report from the assigned crew member, XP, proficiency, decorations, and permanent personal-photo unlocks. Meet the four women in The crew, take their requests, and view earned pictures in Private transmissions. Wrong repairs change the scenario and fail verification. Replays do not duplicate completion XP.
 
-Eleven complete investigations ship with this release. The four crew Wi-Fi requests each unlock that woman’s personal photo only after successful verification:
+Fourteen complete investigations ship with this release. The four crew Wi-Fi requests each unlock that woman’s personal photo only after successful verification:
 
 | Operation | Investigation |
 | --- | --- |
@@ -23,6 +23,11 @@ Eleven complete investigations ship with this release. The four crew Wi-Fi reque
 | Sylvanas Goes Silent | Disabled local wireless radio and autoconnection |
 | Samus on the Guest List | Wrong SSID/profile and the guest-network boundary |
 | Jenny’s Crowded Airwaves | Band restriction, scan/link evidence and reassociation |
+| Known by Name | Vim, /etc/hosts, backup/diff and system name lookup |
+| Saved Is Not Active | RHEL 9 keyfile: disk → NetworkManager reload → interface activation |
+| The Wrong Destination | Vim, application endpoint, service restart and health verification |
+
+The three configuration missions include a **Vim basics trainer** with Normal/Insert modes, keyboard and touch controls, save/discard, undo of the last Insert session, root/readonly behavior and resumable unsaved buffers. It is a limited training editor, not a complete Vim implementation. Files, profiles and services are modeled independently; saving a file alone does not count as activating a network profile or restarting an application. The original backup and a reviewed diff are part of verification. These new missions are browser simulations, not additional VM deployments.
 
 The browser terminal is explicitly a stateful simulation. It never forwards typed commands to the computer. The real VM mission uses your ordinary SSH terminal and independent VM-side verification.
 

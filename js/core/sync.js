@@ -1,4 +1,4 @@
-import { mergeProgress, normalize } from './progress.js?v=1.1.1';
+import { mergeProgress, normalize } from './progress.js?v=1.2.0';
 const utf8 = new TextEncoder();
 const text = new TextDecoder();
 const base64 = bytes => { let s = ''; for (const b of bytes) s += String.fromCharCode(b); return btoa(s); };

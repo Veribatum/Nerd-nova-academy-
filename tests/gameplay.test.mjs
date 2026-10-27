@@ -1,3 +1,5 @@
+import { isConfigMission } from '../js/sim/config.js';
+import { solveConfig } from './config-fixtures.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSimulation, runCommand, verifySimulation, applyCamera, filterPackets, packetRows, restoreSimulation } from '../js/sim/engine.js';
@@ -20,7 +22,8 @@ for (const mission of MISSIONS) {
   test(`${mission.id}: fault fails, real repair sequence passes, checkpoint resumes`, () => {
     let state = createSimulation(mission.id, 22);
     assert.equal(verifySimulation(state).passed, false);
-    for (const command of solve[mission.id]) state = runCommand(state, command);
+    if (isConfigMission(mission.id)) state = solveConfig(state);
+    else for (const command of solve[mission.id]) state = runCommand(state, command);
     state = restoreSimulation(JSON.parse(JSON.stringify(state)));
     const verified = verifySimulation(state); assert.equal(verified.passed, true, JSON.stringify(verified.checks));
     assert.ok(state.inspected.length > 0);

@@ -1,12 +1,13 @@
-import { ProgressStore, xpTotal } from './core/progress.js?v=1.1.1';
-import { CloudSync } from './core/sync.js?v=1.1.1';
-import { Companion, validVMReceipt } from './lab/companion.js?v=1.1.1';
-import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.1.1';
-import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.1.1';
-import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.1.1';
-import { createPcap } from './sim/pcap.js?v=1.1.1';
-import * as screens from './ui/screens.js?v=1.1.1';
-import { h, icon, download, dateLabel } from './ui/utils.js?v=1.1.1';
+import { editConfig } from './sim/config.js?v=1.2.0';
+import { ProgressStore, xpTotal } from './core/progress.js?v=1.2.0';
+import { CloudSync } from './core/sync.js?v=1.2.0';
+import { Companion, validVMReceipt } from './lab/companion.js?v=1.2.0';
+import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.2.0';
+import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.2.0';
+import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.2.0';
+import { createPcap } from './sim/pcap.js?v=1.2.0';
+import * as screens from './ui/screens.js?v=1.2.0';
+import { h, icon, download, dateLabel } from './ui/utils.js?v=1.2.0';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
@@ -179,6 +180,18 @@ async function cleanupVM() {
     closeDialog(); if (ctx.ui.page === 'mission' && !ctx.active) go('watch'); toast('Isolated lab cleaned up.');
   });
 }
+function updateEditor(action, value = '') {
+  if (ctx.active?.mode !== 'sim' || !ctx.active.snapshot.config?.editor) return;
+  ctx.active.snapshot = editConfig(ctx.active.snapshot, action, value); ctx.ui.checks = null;
+  checkpoint({ changes: ctx.active.snapshot.changes }); render();
+  const editor=ctx.active.snapshot.config.editor;
+  (editor ? editor.mode === 'insert' ? $('vim-buffer') : $('vim-command') : $('command-input'))?.focus({ preventScroll: true });
+}
+document.addEventListener('input', event => {
+  if (event.target.id !== 'vim-buffer' || ctx.active?.mode !== 'sim') return;
+  ctx.active.snapshot = editConfig(ctx.active.snapshot, 'input', event.target.value);
+  ctx.ui.checks=null; checkpoint();
+});
 document.addEventListener('click', async event => {
   const closeLink = event.target.closest('[data-close-dialog]'); if (closeLink) closeDialog();
   const b = event.target.closest('button[data-action]'); if (!b || b.disabled) return;
@@ -200,6 +213,10 @@ document.addEventListener('click', async event => {
     if (action === 'insert-command') { $('command-input').value = b.dataset.command; $('command-input').focus(); return; }
     if (action === 'hint') { if (ctx.active?.mode === 'sim') ctx.active.snapshot.hints = Math.min(3, ctx.active.snapshot.hints + 1);
       else if (ctx.active) ctx.active.hints = Math.min(3, (ctx.active.hints || 0) + 1); checkpoint(); return render(); }
+    if (action === 'vim-insert') return updateEditor('insert');
+    if (action === 'vim-normal') return updateEditor('normal');
+    if (action === 'vim-undo') return updateEditor('undo');
+    if (action === 'vim-save' || action === 'vim-discard') { updateEditor('normal'); return updateEditor('ex', action === 'vim-save' ? ':wq' : ':q!'); }
     if (action === 'verify') return verify();
     if (action === 'reset-mission') return resetMission();
     if (action === 'cleanup-vm') return cleanupVM();
@@ -222,12 +239,13 @@ document.addEventListener('submit', async event => {
   if (ctx.busy) return;
   const data = new FormData(form);
   try {
+    if (form.id === 'vim-command-form') return updateEditor('ex', String(data.get('ex') || ''));
     if (form.id === 'command-form') {
       const raw = String(data.get('command') || '').trim(); if (!raw || ctx.active?.mode !== 'sim') return;
       commandHistory.push(raw); historyPosition = commandHistory.length;
       ctx.active.snapshot = runCommand(ctx.active.snapshot, raw); ctx.ui.checks = null;
       checkpoint({ changes: ctx.active.snapshot.changes, hints: ctx.active.snapshot.hints });
-      render(); $('command-input')?.focus({ preventScroll: true }); return;
+      render(); ($('vim-buffer') || $('command-input'))?.focus({ preventScroll: true }); return;
     }
     if (form.id === 'packet-filter-form') { ctx.ui.packetFilter = $('packet-filter').value; return render(); }
     if (form.id === 'camera-form') { ctx.active.snapshot = applyCamera(ctx.active.snapshot, Number(data.get('port')), String(data.get('vlan')));
@@ -253,6 +271,15 @@ document.addEventListener('change', event => {
   }
 });
 document.addEventListener('keydown', event => {
+  if (event.target.id === 'vim-buffer') {
+    const editor=ctx.active?.snapshot?.config?.editor;
+    if (event.key === 'Escape') { event.preventDefault(); return updateEditor('normal'); }
+    if (editor?.mode === 'normal' && ['i','u',':'].includes(event.key)) {
+      event.preventDefault();
+      if (event.key === ':') { $('vim-command').value=':'; $('vim-command').focus(); return; }
+      return updateEditor(event.key === 'i' ? 'insert' : 'undo');
+    }
+  }
   if (event.target.id !== 'command-input') return;
   if (['ArrowUp', 'ArrowDown'].includes(event.key)) { event.preventDefault(); historyPosition = Math.max(0, Math.min(commandHistory.length, historyPosition + (event.key === 'ArrowUp' ? -1 : 1))); event.target.value = commandHistory[historyPosition] || ''; }
 });
@@ -271,7 +298,7 @@ window.addEventListener('storage', event => {
   }
 });
 // Static import keeps this event handler synchronous and testable.
-import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.1.1';
+import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.2.0';
 function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase() + ' / ' + new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); }
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');
