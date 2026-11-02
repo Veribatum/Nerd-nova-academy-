@@ -1,26 +1,30 @@
-import { editConfig } from './sim/config.js?v=1.2.1';
-import { ProgressStore, xpTotal } from './core/progress.js?v=1.2.1';
-import { CloudSync } from './core/sync.js?v=1.2.1';
-import { Companion, validVMReceipt } from './lab/companion.js?v=1.2.1';
-import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.2.1';
-import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.2.1';
-import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.2.1';
-import { createPcap } from './sim/pcap.js?v=1.2.1';
-import * as screens from './ui/screens.js?v=1.2.1';
-import { h, icon, download, dateLabel } from './ui/utils.js?v=1.2.1';
+import { WORK_MODE_KEY, readWorkMode, crewArt } from './ui/work-mode.js?v=1.3.0';
+import { editConfig } from './sim/config.js?v=1.3.0';
+import { ProgressStore, xpTotal } from './core/progress.js?v=1.3.0';
+import { CloudSync } from './core/sync.js?v=1.3.0';
+import { Companion, validVMReceipt } from './lab/companion.js?v=1.3.0';
+import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.3.0';
+import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.3.0';
+import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.3.0';
+import { createPcap } from './sim/pcap.js?v=1.3.0';
+import * as screens from './ui/screens.js?v=1.3.0';
+import { h, icon, download, dateLabel } from './ui/utils.js?v=1.3.0';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
 const sync = new CloudSync(store);
 const companion = new Companion();
 const ctx = { store, sync, companion, active: null, busy: false,
-  ui: { page: 'watch', mission: '', filter: 'ALL', manualSearch: '', tool: 'terminal', node: 'control',
+  ui: { workMode: readWorkMode(), page: 'watch', mission: '', filter: 'ALL', manualSearch: '', tool: 'terminal', node: 'control',
     packet: 0, packetFilter: '', checks: null, awarded: null, dialog: '', photo: 0, crew: null, galleryCrew: 'all' } };
 let commandHistory = []; let historyPosition = 0; let toastTimer;
 const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['crew', 'The crew', 'radio'], ['record', 'Service record', 'shield']];
 
 function toast(message) { $('toast').textContent = message; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').classList.remove('visible'); $('toast').textContent = ''; }, 5000); }
 function shell() {
+  document.body.classList.toggle('work-mode', ctx.ui.workMode);
+  $('work-switch').setAttribute('aria-checked', String(ctx.ui.workMode));
+  $('work-switch-state').textContent = ctx.ui.workMode ? 'On' : 'Off';
   const page = ['briefing', 'mission', 'debrief'].includes(ctx.ui.page) ? 'operations' : ctx.ui.page === 'morale' ? 'crew' : ctx.ui.page;
   $('navigation').innerHTML = nav.map(([id, label, glyph]) => `<a href="#/${id}" class="${id === page ? 'active' : ''}" ${id === page ? 'aria-current="page"' : ''}>${icon(glyph, 19)}<span>${label}</span></a>`).join('');
   updateSaveBeacon();
@@ -93,7 +97,7 @@ function showDialog(kind) {
     const photo = unlocked[ctx.ui.photo]; if (!photo) return;
     $('dialog').classList.add('photo-dialog');
     const owner = crewById(photo.crew);
-    html = `<div class="eyebrow">${owner.name.toUpperCase()} / PRIVATE PHOTO ${ctx.ui.photo + 1} OF ${unlocked.length}</div><h2>${h(photo.title)}</h2><img class="full-photo" src="${photo.file}" alt="${owner.name} — ${h(photo.title)}"><div class="photo-navigation"><button class="button ghost" data-action="photo-prev" aria-label="Previous photo">${icon('back', 18)}</button><p>${h(photo.caption)}</p><button class="button ghost" data-action="photo-next" aria-label="Next photo">${icon('arrow', 18)}</button></div>`;
+    html = `<div class="eyebrow">${owner.name.toUpperCase()} / ${ctx.ui.workMode ? 'DUTY PORTRAIT' : 'PRIVATE PHOTO'} ${ctx.ui.photo + 1} OF ${unlocked.length}</div><h2>${h(photo.title)}</h2><img class="full-photo" src="${crewArt(ctx, owner, photo.file)}" alt="${owner.name} — ${h(photo.title)}"><div class="photo-navigation"><button class="button ghost" data-action="photo-prev" aria-label="Previous photo">${icon('back', 18)}</button><p>${ctx.ui.workMode ? 'Armored crew portrait' : h(photo.caption)}</p><button class="button ghost" data-action="photo-next" aria-label="Next photo">${icon('arrow', 18)}</button></div>`;
   }
   $('dialog-content').innerHTML = html; $('dialog-error').hidden = true;
   if (!$('dialog').open) $('dialog').showModal();
@@ -192,11 +196,24 @@ document.addEventListener('input', event => {
   ctx.active.snapshot = editConfig(ctx.active.snapshot, 'input', event.target.value);
   ctx.ui.checks=null; checkpoint();
 });
+function setWorkMode(enabled) {
+  ctx.ui.workMode = enabled;
+  const input = $('command-input');
+  const draft = input?.value;
+  render();
+  if (draft !== undefined && $('command-input')) $('command-input').value = draft;
+  if ($('dialog').open && ctx.ui.dialog === 'photo') showDialog('photo');
+}
 document.addEventListener('click', async event => {
   const closeLink = event.target.closest('[data-close-dialog]'); if (closeLink) closeDialog();
   const b = event.target.closest('button[data-action]'); if (!b || b.disabled) return;
   const action = b.dataset.action;
   try {
+    if (action === 'toggle-work') {
+      const enabled = !ctx.ui.workMode;
+      try { localStorage.setItem(WORK_MODE_KEY, enabled ? 'on' : 'off'); } catch { /* Session setting still applies. */ }
+      return setWorkMode(enabled);
+    }
     if (action === 'sync-dialog') return showDialog('sync');
     if (action === 'lab-dialog') return showDialog('lab');
     if (action === 'close-dialog') return closeDialog();
@@ -290,6 +307,7 @@ sync.addEventListener('status', updateSaveBeacon);
 window.addEventListener('online', () => sync.synchronize().catch(() => {}));
 document.addEventListener('visibilitychange', () => { if (!document.hidden) sync.synchronize().catch(() => {}); });
 window.addEventListener('storage', event => {
+  if (event.key === WORK_MODE_KEY || event.key === null) setWorkMode(readWorkMode());
   if (event.key === 'nerdnova_v3' && event.newValue) {
     try { const incoming = JSON.parse(event.newValue); store.data = (awaitImportMerge(store.data, incoming));
       // In-memory merge only. Writing here would create a cross-tab ping-pong.
@@ -298,7 +316,7 @@ window.addEventListener('storage', event => {
   }
 });
 // Static import keeps this event handler synchronous and testable.
-import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.2.1';
+import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.3.0';
 function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase() + ' / ' + new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); }
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');

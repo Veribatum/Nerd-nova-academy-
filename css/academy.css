@@ -18,3 +18,23 @@
 
 /* Mission-local Vim basics trainer; native text editing stays usable on touch. */
 .vim-trainer{padding:20px;min-width:0}.vim-file{font:13px var(--font-mono,monospace);overflow-wrap:anywhere;color:var(--gold,#e7b477);padding:14px 0}.vim-keys{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.vim-keys .button{min-height:44px;padding:10px 12px;font-size:12px}.vim-buffer{display:block;width:100%;box-sizing:border-box;background:#080e13;color:#e1ece9;border:1px solid #53616b;border-left:3px solid #89d5de;padding:14px;font:16px/1.65 ui-monospace,Consolas,monospace;tab-size:4;resize:vertical;white-space:pre;overflow:auto;min-height:300px}.vim-buffer[readonly]{border-left-color:#e7b477}.vim-buffer:focus{outline:2px solid #89d5de;outline-offset:2px}.vim-ex{display:flex;gap:8px;margin-top:8px}.vim-ex input{min-width:0;flex:1;font:16px ui-monospace,Consolas,monospace}#vim-message{font:13px/1.6 ui-monospace,Consolas,monospace;min-height:42px;overflow-wrap:anywhere}.vim-trainer form label{font-size:11px;letter-spacing:1px}.vim-trainer input:disabled{opacity:.45}@media(max-width:700px){.vim-trainer{padding:14px}.vim-buffer{min-height:300px}.vim-ex .button{padding:10px 15px}}
+
+.work-switch {
+  flex: none;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #111b23;
+  color: var(--ink);
+  font: 12px var(--mono);
+  white-space: nowrap;
+}
+.work-switch span { margin-left: 3px; color: var(--muted); }
+.work-switch[aria-checked="true"] { border-color: #69b9ac; }
+.work-switch[aria-checked="true"] span { color: #9ae0d4; }
+.work-mode .hero-art { width: 63%; object-position: center 24%; }
+@media(max-width:700px) {
+  .site-header { gap: 8px; padding-inline: 12px; }
+  .work-mode .hero-art { width: 100%; object-position: center top; }
+}

@@ -23,3 +23,21 @@ test('real lab presentation renders without a synthetic snapshot and uses actual
   const html = screens.workstation(ctx, MISSIONS[0]); assert.ok(html.includes('sudo ip -n nn-academy')); assert.ok(html.includes('Verify real VM'));
 });
 test('rank thresholds retain the legacy 500 XP progression', () => { assert.equal(rankFor(499), 0); assert.equal(rankFor(500), 1); assert.equal(rankFor(1100), 2); });
+
+test('Work mode only emits armored crew artwork, including unlocked gallery entries', () => {
+  const work = { ...ctx, ui: { ...ctx.ui, workMode: true }, store: {
+    data: { ...store.data, completed: MISSIONS.map(m => m.id) }
+  } };
+  const mission = MISSIONS[0];
+  work.active = { mission: mission.id, mode: 'sim', snapshot: createSimulation(mission.id), attempt: 'fixture' };
+  const pages = [screens.watchdesk(work), screens.crew(work), screens.briefing(work, mission),
+    screens.workstation(work, mission), screens.debrief(work, mission), screens.morale(work)];
+  for (const html of pages) {
+    const art = [...html.matchAll(/src="(assets\/[^"]+\.webp)"/g)].map(match => match[1]);
+    assert.ok(art.length);
+    assert.ok(art.every(src => src.startsWith('assets/work-')), art.join(', '));
+  }
+  const offDuty = { ...work, ui: { ...work.ui, workMode: false } };
+  assert.match(screens.watchdesk(offDuty), /rapscallion-command\.webp/);
+  assert.match(screens.morale(offDuty), /nova-wifi-reward\.webp/);
+});
