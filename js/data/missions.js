@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.5';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.5';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.6';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.6';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -139,7 +139,14 @@ export const GALLERY = [
   { id: 'afterhours-hangar', crew: 'nova', title: 'Hangar after dark', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-hangar.webp', mission: 'nova-wifi', unlock: 9 },
   { id: 'afterhours-game-night', crew: 'nova', title: 'Game night in quarters', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-game-night.webp', mission: 'nova-wifi', unlock: 11 },
   { id: 'afterhours-lounge', crew: 'nova', title: 'Rapscallion lounge night', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-lounge.webp', mission: 'nova-wifi', unlock: 13 },
-  { id: 'afterhours-crew-weekend', crew: 'jenny', title: 'Rum Island crew album', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-crew-weekend.webp', mission: 'jenny-wifi', unlock: 15 }
+  { id: 'afterhours-crew-weekend', crew: 'jenny', title: 'Rum Island crew album', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-crew-weekend.webp', mission: 'jenny-wifi', unlock: 15 },
+  { id: 'bridge-selfie', crew: 'jenny', title: 'All hands on the bridge', caption: 'Jenny set the timer. Nova grabbed the camera.', file: 'assets/home-bridge-selfie.webp', mission: 'jenny-wifi', unlock: 8 },
+  { id: 'castle-at-dusk', crew: 'sylvanas', title: 'Castle at dusk', caption: 'Even the old guard takes a night off.', file: 'assets/home-castle-at-dusk.webp', mission: 'sylvanas-wifi', unlock: 7 },
+  { id: 'cockpit-coffee', crew: 'samus', title: 'Cockpit coffee', caption: 'The helmet can wait until I finish this.', file: 'assets/home-cockpit-coffee.webp', mission: 'samus-wifi', unlock: 7 },
+  { id: 'late-shift', crew: 'sylvanas', title: 'Late shift', caption: 'I saved the logs and a seat for you.', file: 'assets/home-late-shift.webp', mission: 'sylvanas-wifi', unlock: 12 },
+  { id: 'cabin-break', crew: 'samus', title: 'Cabin break', caption: 'Shuttle parked. Comms on silent.', file: 'assets/home-cabin-break.webp', mission: 'samus-wifi', unlock: 12 },
+  { id: 'moonlit-bonfire', crew: 'nova', title: 'Moonlit bonfire', caption: 'Last one to the fire owes the crew a round.', file: 'assets/home-moonlit-bonfire.webp', mission: 'nova-wifi', unlock: 7 },
+  { id: 'arcade-token', crew: 'nova', title: 'One more credit', caption: 'Your move, Captain.', file: 'assets/home-arcade-token.webp', mission: 'nova-wifi', unlock: 12 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

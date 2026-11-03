@@ -37,3 +37,5 @@ Two new generated live-action Nova scenes appear in Home mode. The boardwalk and
 Release 1.4.4 adds eight generated live-action off-duty scenes, two per crew member. They unlock after the corresponding Wi-Fi repair and six or eleven distinct operations.
 
 Release 1.4.5 adds four previously unused user-supplied images to the Home off-duty album.
+
+Release 1.4.6 adds seven user-supplied Home gallery photos. The bridge group photo is filed under Jenny.
