@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.3';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.3';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.4';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.4';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -127,7 +127,15 @@ export const GALLERY = [
   { id: 'samus-sundeck', crew: 'samus', title: 'Rum Island sunset', caption: 'Think you can keep up off duty, too?', file: 'assets/home-samus-original.webp', mission: 'samus-wifi', unlock: 12 },
   { id: 'jenny-sundeck', crew: 'jenny', title: 'Friday with the crew', caption: 'Jenny logged the whole toast. Major Bunny is withholding comment.', file: 'assets/home-jenny-original.webp', mission: 'jenny-wifi', unlock: 14 },
   { id: 'nova-boardwalk', crew: 'nova', title: 'Last call on Rum Island', caption: 'Turns out the island gets excellent reception when I leave the radio on the ship.', file: 'assets/home-nova-boardwalk.webp', mission: 'nova-wifi', unlock: 8 },
-  { id: 'nova-observation', crew: 'nova', title: 'A toast in orbit', caption: 'Here’s to a quiet watch and a Captain who checks the logs.', file: 'assets/home-nova-observation.webp', mission: 'nova-wifi', unlock: 10 }
+  { id: 'nova-observation', crew: 'nova', title: 'A toast in orbit', caption: 'Here’s to a quiet watch and a Captain who checks the logs.', file: 'assets/home-nova-observation.webp', mission: 'nova-wifi', unlock: 10 },
+  { id: 'nova-jazz', crew: 'nova', title: 'Jazz after jump', caption: 'One more set before we call it a night.', file: 'assets/home-nova-jazz.webp', mission: 'nova-wifi', unlock: 6 },
+  { id: 'nova-market', crew: 'nova', title: 'Rum Island night market', caption: 'I found the good food stall. Keep up, Captain.', file: 'assets/home-nova-market.webp', mission: 'nova-wifi', unlock: 11 },
+  { id: 'sylvanas-balcony', crew: 'sylvanas', title: 'Moonlit balcony', caption: 'Even I can appreciate a night without alarms.', file: 'assets/home-sylvanas-balcony.webp', mission: 'sylvanas-wifi', unlock: 6 },
+  { id: 'sylvanas-cafe', crew: 'sylvanas', title: 'A table for two', caption: 'I picked the corner with the best view of the room.', file: 'assets/home-sylvanas-cafe.webp', mission: 'sylvanas-wifi', unlock: 11 },
+  { id: 'samus-observatory', crew: 'samus', title: 'Clear skies', caption: 'Funny how much farther you can see when the cockpit is off.', file: 'assets/home-samus-observatory.webp', mission: 'samus-wifi', unlock: 6 },
+  { id: 'samus-arcade', crew: 'samus', title: 'High score', caption: 'I said I was off contract. I never said I was off my game.', file: 'assets/home-samus-arcade.webp', mission: 'samus-wifi', unlock: 11 },
+  { id: 'jenny-bowling', crew: 'jenny', title: 'Perfect trajectory', caption: 'The score says strike. My logs say repeatable.', file: 'assets/home-jenny-bowling.webp', mission: 'jenny-wifi', unlock: 6 },
+  { id: 'jenny-bonfire', crew: 'jenny', title: 'Embers on the beach', caption: 'For once, I muted the notifications.', file: 'assets/home-jenny-bonfire.webp', mission: 'jenny-wifi', unlock: 11 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

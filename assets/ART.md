@@ -33,3 +33,5 @@ The previous poolside rewards use `home-*-photo.webp`. The built-in image genera
 The current Home rewards use user-supplied Rum Island images in `home-*-original.webp`. Nova is at the sunset bar, Sylvanas is in the hangar, Samus is at the beach, and Jenny appears in the Friday crew photo. These entries keep their existing unlock IDs and use armored reward art in Work mode.
 
 Two new generated live-action Nova scenes appear in Home mode. The boardwalk and observation lounge images use separate frames from a cinematic diptych. Work mode hides the private transmissions gallery.
+
+Release 1.4.4 adds eight generated live-action off-duty scenes, two per crew member. They unlock after the corresponding Wi-Fi repair and six or eleven distinct operations.
