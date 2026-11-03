@@ -22,4 +22,8 @@ export const CREW = [
 ];
 export const crewById = id => CREW.find(c => c.id === id);
 export const crewForMission = mission => crewById(mission?.crew) || CREW[0];
-export const photoUnlocked = (photo, progress) => photo.mission ? progress.completed.includes(photo.mission) : progress.completed.length >= photo.unlock;
+export function photoUnlocked(photo, progress) {
+  const completed = progress.completed;
+  return (!photo.mission || completed.includes(photo.mission))
+    && completed.length >= (photo.unlock ?? 0);
+}

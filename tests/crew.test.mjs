@@ -30,3 +30,14 @@ test('replay record reports zero new XP and no new-photo claim', () => {
   id = store.start('nova-wifi','sim'); store.finish(id,'nova-wifi','sim',350,['Wireless'],{},true);
   assert.equal(store.data.attempts[id].xpAwarded, 0); assert.deepEqual(store.data.attempts[id].newPhotos, []);
 });
+
+test('poolside photos require both the crew repair and the operation milestone', () => {
+  const ids = MISSIONS.map(m => m.id);
+  for (const photo of GALLERY.filter(g => g.mission && g.unlock)) {
+    const others = ids.filter(id => id !== photo.mission);
+    assert.equal(photoUnlocked(photo, { completed: others }), false);
+    const short = [photo.mission, ...others.slice(0, photo.unlock - 2)];
+    assert.equal(photoUnlocked(photo, { completed: short }), false);
+    assert.equal(photoUnlocked(photo, { completed: [...short, others[photo.unlock - 2]] }), true);
+  }
+});

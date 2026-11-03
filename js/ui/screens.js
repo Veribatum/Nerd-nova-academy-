@@ -1,14 +1,14 @@
-import { crewArt } from './work-mode.js?v=1.3.2';
-import { isConfigMission, configChecks } from '../sim/config.js?v=1.3.2';
-import { configEditor } from './config-editor.js?v=1.3.2';
-import { CREW, crewForMission, photoUnlocked } from '../data/crew.js?v=1.3.2';
-import { crewRoster, crewDeck } from './crew-screens.js?v=1.3.2';
-import { isWifiMission, wifiChecks } from '../sim/wifi.js?v=1.3.2';
-import { MISSIONS, missionById, GALLERY, RANKS, rankFor, MEDALS } from '../data/missions.js?v=1.3.2';
-import { MANUAL } from '../data/manual.js?v=1.3.2';
-import { xpTotal, achievements } from '../core/progress.js?v=1.3.2';
-import { equipment, prompt, packetRows, filterPackets } from '../sim/engine.js?v=1.3.2';
-import { h, icon, button, dateLabel } from './utils.js?v=1.3.2';
+import { crewArt } from './work-mode.js?v=1.4.0';
+import { isConfigMission, configChecks } from '../sim/config.js?v=1.4.0';
+import { configEditor } from './config-editor.js?v=1.4.0';
+import { CREW, crewForMission, photoUnlocked } from '../data/crew.js?v=1.4.0';
+import { crewRoster, crewDeck } from './crew-screens.js?v=1.4.0';
+import { isWifiMission, wifiChecks } from '../sim/wifi.js?v=1.4.0';
+import { MISSIONS, missionById, GALLERY, RANKS, rankFor, MEDALS } from '../data/missions.js?v=1.4.0';
+import { MANUAL } from '../data/manual.js?v=1.4.0';
+import { xpTotal, achievements } from '../core/progress.js?v=1.4.0';
+import { equipment, prompt, packetRows, filterPackets } from '../sim/engine.js?v=1.4.0';
+import { h, icon, button, dateLabel } from './utils.js?v=1.4.0';
 const tag = (text, klass = '') => `<span class="tag ${klass}">${h(text)}</span>`;
 const sectionHead = (eyebrow, title, extra = '') => `<div class="section-head"><div><div class="eyebrow">${h(eyebrow)}</div><h2>${h(title)}</h2></div>${extra}</div>`;
 const briefLink = m => `href="#/briefing/${m.id}"`;
@@ -96,8 +96,12 @@ export function manual(ctx) {
 export function morale(ctx) {
   const p = ctx.store.data; const selected = ctx.ui.galleryCrew || 'all';
   const photos = selected === 'all' ? GALLERY : GALLERY.filter(g => g.crew === selected);
-  return `<div class="page-heading"><div class="eyebrow">RAPSCALLION / CREW REWARDS</div><h1>PRIVATE TRANSMISSIONS<span class="accent">.</span></h1><p>Earned photos from Nova, Sylvanas, Samus and Jenny. Fix her connection. Pass verification. Open her personal transmission.</p></div><div class="gallery-toolbar"><div class="filter-bar">${[['all','ALL CREW'],...CREW.map(c => [c.id,c.name])].map(([id,label])=>`<button class="filter ${id===selected?'active':''}" data-action="gallery-filter" data-crew="${id}">${label}</button>`).join('')}</div><a class="text-link" href="#/crew">Crew trouble tickets ${icon('arrow',17)}</a></div><div class="gallery-grid">${photos.map(g => { const unlocked = photoUnlocked(g,p); const owner=CREW.find(c=>c.id===g.crew); const required=MISSIONS.find(m=>m.id===g.mission);
-    return `<article class="gallery-card ${unlocked ? 'unlocked' : 'locked'}">${unlocked ? `<button class="gallery-open" data-action="open-photo" data-photo="${g.id}" aria-label="Open ${h(g.title)}"><img src="${crewArt(ctx, owner, g.file, 'reward')}" alt="${owner.name} — ${h(g.title)}" width="1122" height="1402" loading="lazy"><span class="gallery-expand">${icon('eye',20)} OPEN TRANSMISSION</span></button>` : `<div class="gallery-locked-art" aria-hidden="true">${icon('lock',36)}<b>${owner.name.toUpperCase()} / PRIVATE PHOTO</b><span>${g.mission ? 'VERIFY HER WI-FI REPAIR' : g.unlock+' OPERATIONS REQUIRED'}</span></div>`}<div class="gallery-caption"><div class="eyebrow">${owner.name.toUpperCase()} / ${unlocked ? 'UNLOCKED' : 'REWARD PENDING'}</div><h3>${h(g.title)}</h3><p>${unlocked ? (ctx.ui.workMode ? 'Crew celebration aboard the Rapscallion' : h(g.caption)) : required ? h(required.title) : Math.min(p.completed.length,g.unlock)+' of '+g.unlock+' operations cleared'}</p>${!unlocked && required ? `<a class="text-link" href="#/briefing/${required.id}">Take her request ${icon('arrow',16)}</a>` : ''}</div></article>`;
+  return `<div class="page-heading"><div class="eyebrow">RAPSCALLION / CREW REWARDS</div><h1>PRIVATE TRANSMISSIONS<span class="accent">.</span></h1><p>Earned photos from Nova, Sylvanas, Samus and Jenny. Verify a crew request for her first photo. Clear more operations to unlock the poolside set.</p></div><div class="gallery-toolbar"><div class="filter-bar">${[['all','ALL CREW'],...CREW.map(c => [c.id,c.name])].map(([id,label])=>`<button class="filter ${id===selected?'active':''}" data-action="gallery-filter" data-crew="${id}">${label}</button>`).join('')}</div><a class="text-link" href="#/crew">Crew trouble tickets ${icon('arrow',17)}</a></div><div class="gallery-grid">${photos.map(g => { const unlocked = photoUnlocked(g,p); const owner=CREW.find(c=>c.id===g.crew); const required=MISSIONS.find(m=>m.id===g.mission);
+    const needsRequest = required && !p.completed.includes(required.id);
+    const count = g.unlock ? `${Math.min(p.completed.length, g.unlock)} of ${g.unlock} operations cleared` : '';
+    const requirement = [needsRequest ? required.title : '', count].filter(Boolean).join(' · ');
+
+    return `<article class="gallery-card ${unlocked ? 'unlocked' : 'locked'}">${unlocked ? `<button class="gallery-open" data-action="open-photo" data-photo="${g.id}" aria-label="Open ${h(g.title)}"><img src="${crewArt(ctx, owner, g.file, 'reward')}" alt="${owner.name} — ${h(g.title)}" width="1122" height="1402" loading="lazy"><span class="gallery-expand">${icon('eye',20)} OPEN TRANSMISSION</span></button>` : `<div class="gallery-locked-art" aria-hidden="true">${icon('lock',36)}<b>${owner.name.toUpperCase()} / PRIVATE PHOTO</b><span>${g.unlock ? g.unlock+' OPERATIONS REQUIRED' : 'VERIFY HER WI-FI REPAIR'}</span></div>`}<div class="gallery-caption"><div class="eyebrow">${owner.name.toUpperCase()} / ${unlocked ? 'UNLOCKED' : 'REWARD PENDING'}</div><h3>${h(g.title)}</h3><p>${unlocked ? (ctx.ui.workMode ? 'Crew celebration aboard the Rapscallion' : h(g.caption)) : h(requirement)}</p>${!unlocked && needsRequest ? `<a class="text-link" href="#/briefing/${required.id}">Take her request ${icon('arrow',16)}</a>` : ''}</div></article>`;
   }).join('')}</div><div class="quiet-note">${icon('star',17)} Permanent unlocks, including earlier Nova rewards. Cross-device saves carry completed crew requests and photo privileges together.</div>`;
 }
 export function crew(ctx, selected) { return crewDeck(ctx, selected, missionCard); }
