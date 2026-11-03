@@ -24,23 +24,24 @@ test('real lab presentation renders without a synthetic snapshot and uses actual
 });
 test('rank thresholds retain the legacy 500 XP progression', () => { assert.equal(rankFor(499), 0); assert.equal(rankFor(500), 1); assert.equal(rankFor(1100), 2); });
 
-test('Work mode only emits armored crew artwork, including unlocked gallery entries', () => {
+test('Work mode only emits armored crew artwork, and hides private transmissions', () => {
   const work = { ...ctx, ui: { ...ctx.ui, workMode: true }, store: {
     data: { ...store.data, completed: MISSIONS.map(m => m.id) }
   } };
   const mission = MISSIONS[0];
   work.active = { mission: mission.id, mode: 'sim', snapshot: createSimulation(mission.id), attempt: 'fixture' };
   const pages = [screens.watchdesk(work), screens.crew(work), screens.briefing(work, mission),
-    screens.workstation(work, mission), screens.debrief(work, mission), screens.morale(work)];
+    screens.workstation(work, mission), screens.debrief(work, mission)];
   for (const html of pages) {
     const art = [...html.matchAll(/src="(assets\/[^"]+\.webp)"/g)].map(match => match[1]);
     assert.ok(art.length);
+    assert.doesNotMatch(html, /#\/morale/);
     assert.ok(art.every(src => src.startsWith('assets/work-')), art.join(', '));
   }
   assert.match(pages[0], /work-nova-bridge\.webp/);
   assert.match(pages[1], /work-sylvanas-crew\.webp/);
   assert.match(pages[2], /work-nova-mission\.webp/);
-  assert.match(pages[5], /work-jenny-reward\.webp/);
+  assert.doesNotMatch(screens.morale(work), /gallery-grid|open-photo|<img/);
   const offDuty = { ...work, ui: { ...work.ui, workMode: false } };
   assert.match(screens.watchdesk(offDuty), /rapscallion-command\.webp/);
   assert.match(screens.morale(offDuty), /nova-wifi-reward\.webp/);

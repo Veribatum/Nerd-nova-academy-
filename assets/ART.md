@@ -31,3 +31,5 @@ The home gallery's poolside set uses `home-*.webp` from a built-in image generat
 The previous poolside rewards use `home-*-photo.webp`. The built-in image generator prompt requested a photographic live-action contact sheet with Nova in a red sundress at a poolside cafe, Sylvanas in a violet summer dress at the viewport, Samus playing with a beach ball in athletic resort clothes, and Jenny in a cyan resort shirt on a deck chair. The illustrated assets are retained for older cached releases.
 
 The current Home rewards use user-supplied Rum Island images in `home-*-original.webp`. Nova is at the sunset bar, Sylvanas is in the hangar, Samus is at the beach, and Jenny appears in the Friday crew photo. These entries keep their existing unlock IDs and use armored reward art in Work mode.
+
+Two new generated live-action Nova scenes appear in Home mode. The boardwalk and observation lounge images use separate frames from a cinematic diptych. Work mode hides the private transmissions gallery.
