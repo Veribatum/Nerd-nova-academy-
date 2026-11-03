@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.1';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.1';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.2';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.2';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -122,10 +122,10 @@ export const GALLERY = [
   { id: 'sylvanas-wifi-photo', crew: 'sylvanas', title: 'A precise reward', caption: 'An elegant solution deserves a little appreciation, Captain.', file: 'assets/sylvanas-wifi-reward.webp', mission: 'sylvanas-wifi' },
   { id: 'samus-wifi-photo', crew: 'samus', title: 'Off-contract transmission', caption: 'Contract uploaded. Now you have my attention.', file: 'assets/samus-wifi-reward.webp', mission: 'samus-wifi' },
   { id: 'jenny-wifi-photo', crew: 'jenny', title: 'Positive reinforcement', caption: 'Verified improvement. Personalized reward. A highly effective feedback loop.', file: 'assets/jenny-wifi-reward.webp', mission: 'jenny-wifi' },
-  { id: 'nova-sundeck', crew: 'nova', title: 'Nova’s poolside pass', caption: 'I saved you the seat with the good view, Captain.', file: 'assets/home-nova-photo.webp', mission: 'nova-wifi', unlock: 8 },
-  { id: 'sylvanas-sundeck', crew: 'sylvanas', title: 'Quiet waters', caption: 'A moment of peace aboard the Rapscallion.', file: 'assets/home-sylvanas-photo.webp', mission: 'sylvanas-wifi', unlock: 10 },
-  { id: 'samus-sundeck', crew: 'samus', title: 'Pool deck challenge', caption: 'Think you can keep up off duty, too?', file: 'assets/home-samus-photo.webp', mission: 'samus-wifi', unlock: 12 },
-  { id: 'jenny-sundeck', crew: 'jenny', title: 'Sunlight protocol', caption: 'Diagnostics complete. Vacation mode enabled.', file: 'assets/home-jenny-photo.webp', mission: 'jenny-wifi', unlock: 14 }
+  { id: 'nova-sundeck', crew: 'nova', title: 'Nova at sunset', caption: 'I saved you the seat with the good view, Captain.', file: 'assets/home-nova-original.webp', mission: 'nova-wifi', unlock: 8 },
+  { id: 'sylvanas-sundeck', crew: 'sylvanas', title: 'Hangar after hours', caption: 'The hangar is a lot quieter after the last shuttle lands.', file: 'assets/home-sylvanas-original.webp', mission: 'sylvanas-wifi', unlock: 10 },
+  { id: 'samus-sundeck', crew: 'samus', title: 'Rum Island sunset', caption: 'Think you can keep up off duty, too?', file: 'assets/home-samus-original.webp', mission: 'samus-wifi', unlock: 12 },
+  { id: 'jenny-sundeck', crew: 'jenny', title: 'Friday with the crew', caption: 'Jenny logged the whole toast. Major Bunny is withholding comment.', file: 'assets/home-jenny-original.webp', mission: 'jenny-wifi', unlock: 14 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],
