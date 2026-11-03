@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.4';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.4';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.5';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.5';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -135,7 +135,11 @@ export const GALLERY = [
   { id: 'samus-observatory', crew: 'samus', title: 'Clear skies', caption: 'Funny how much farther you can see when the cockpit is off.', file: 'assets/home-samus-observatory.webp', mission: 'samus-wifi', unlock: 6 },
   { id: 'samus-arcade', crew: 'samus', title: 'High score', caption: 'I said I was off contract. I never said I was off my game.', file: 'assets/home-samus-arcade.webp', mission: 'samus-wifi', unlock: 11 },
   { id: 'jenny-bowling', crew: 'jenny', title: 'Perfect trajectory', caption: 'The score says strike. My logs say repeatable.', file: 'assets/home-jenny-bowling.webp', mission: 'jenny-wifi', unlock: 6 },
-  { id: 'jenny-bonfire', crew: 'jenny', title: 'Embers on the beach', caption: 'For once, I muted the notifications.', file: 'assets/home-jenny-bonfire.webp', mission: 'jenny-wifi', unlock: 11 }
+  { id: 'jenny-bonfire', crew: 'jenny', title: 'Embers on the beach', caption: 'For once, I muted the notifications.', file: 'assets/home-jenny-bonfire.webp', mission: 'jenny-wifi', unlock: 11 },
+  { id: 'afterhours-hangar', crew: 'nova', title: 'Hangar after dark', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-hangar.webp', mission: 'nova-wifi', unlock: 9 },
+  { id: 'afterhours-game-night', crew: 'nova', title: 'Game night in quarters', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-game-night.webp', mission: 'nova-wifi', unlock: 11 },
+  { id: 'afterhours-lounge', crew: 'nova', title: 'Rapscallion lounge night', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-lounge.webp', mission: 'nova-wifi', unlock: 13 },
+  { id: 'afterhours-crew-weekend', crew: 'jenny', title: 'Rum Island crew album', caption: 'From the Rapscallion off-duty album.', file: 'assets/home-afterhours-crew-weekend.webp', mission: 'jenny-wifi', unlock: 15 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

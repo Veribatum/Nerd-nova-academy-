@@ -35,3 +35,5 @@ The current Home rewards use user-supplied Rum Island images in `home-*-original
 Two new generated live-action Nova scenes appear in Home mode. The boardwalk and observation lounge images use separate frames from a cinematic diptych. Work mode hides the private transmissions gallery.
 
 Release 1.4.4 adds eight generated live-action off-duty scenes, two per crew member. They unlock after the corresponding Wi-Fi repair and six or eleven distinct operations.
+
+Release 1.4.5 adds four previously unused user-supplied images to the Home off-duty album.
