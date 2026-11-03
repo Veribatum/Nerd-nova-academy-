@@ -58,3 +58,13 @@
     aspect-ratio: 1;
   }
 }
+
+.work-mode .crew-card-art,
+.work-mode .quarters-portrait {
+  height: auto;
+  aspect-ratio: 1;
+}
+.work-mode .crew-card-art img,
+.work-mode .quarters-portrait img {
+  object-position: center;
+}

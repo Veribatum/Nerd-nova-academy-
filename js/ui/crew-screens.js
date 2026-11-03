@@ -1,12 +1,12 @@
-import { crewArt } from './work-mode.js?v=1.3.1';
-import { CREW, crewById, photoUnlocked } from '../data/crew.js?v=1.3.1';
-import { MISSIONS, GALLERY } from '../data/missions.js?v=1.3.1';
-import { h, icon } from './utils.js?v=1.3.1';
+import { crewArt } from './work-mode.js?v=1.3.2';
+import { CREW, crewById, photoUnlocked } from '../data/crew.js?v=1.3.2';
+import { MISSIONS, GALLERY } from '../data/missions.js?v=1.3.2';
+import { h, icon } from './utils.js?v=1.3.2';
 
 export function crewRoster(ctx) {
   return `<div class="section-head"><div><div class="eyebrow">RAPSCALLION / PERSONAL TROUBLE TICKETS</div><h2>Same crew. Better signal.</h2></div><a class="text-link" href="#/crew">Meet the crew ${icon('arrow', 17)}</a></div><div class="crew-roster">${CREW.map(c => {
     const fixed = ctx.store.data.completed.includes(c.wifiMission);
-    return `<a class="crew-card" href="#/crew/${c.id}" style="--crew-color:${c.color}"><div class="crew-card-art"><img src="${crewArt(ctx, c)}" alt="Established crew portrait of ${c.name}" width="1122" height="1402" loading="lazy"><span>${fixed ? 'PERSONAL TRANSMISSION UNLOCKED' : 'WI-FI TROUBLE TICKET OPEN'}</span></div><div class="crew-card-copy"><div class="eyebrow">${h(c.station)}</div><h3>${c.name} ${icon(fixed ? 'check' : 'radio', 19)}</h3><p>${h(c.ticket)}</p><b>${fixed ? 'Visit her quarters' : 'Take her request'} ${icon('arrow', 16)}</b></div></a>`;
+    return `<a class="crew-card" href="#/crew/${c.id}" style="--crew-color:${c.color}"><div class="crew-card-art"><img src="${crewArt(ctx, c)}" alt="${ctx.ui?.workMode ? `${c.name} aboard the Rapscallion` : `Crew portrait of ${c.name}`}" width="1122" height="1402" loading="lazy"><span>${fixed ? 'PERSONAL TRANSMISSION UNLOCKED' : 'WI-FI TROUBLE TICKET OPEN'}</span></div><div class="crew-card-copy"><div class="eyebrow">${h(c.station)}</div><h3>${c.name} ${icon(fixed ? 'check' : 'radio', 19)}</h3><p>${h(c.ticket)}</p><b>${fixed ? 'Visit her quarters' : 'Take her request'} ${icon('arrow', 16)}</b></div></a>`;
   }).join('')}</div>`;
 }
 

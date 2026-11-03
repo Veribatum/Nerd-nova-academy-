@@ -38,6 +38,7 @@ test('Work mode only emits armored crew artwork, including unlocked gallery entr
     assert.ok(art.every(src => src.startsWith('assets/work-')), art.join(', '));
   }
   assert.match(pages[0], /work-nova-bridge\.webp/);
+  assert.match(pages[1], /work-sylvanas-crew\.webp/);
   assert.match(pages[2], /work-nova-mission\.webp/);
   assert.match(pages[5], /work-jenny-reward\.webp/);
   const offDuty = { ...work, ui: { ...work.ui, workMode: false } };

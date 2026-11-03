@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.3.1';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.3.1';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.3.2';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.3.2';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
