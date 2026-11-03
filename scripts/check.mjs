@@ -19,7 +19,7 @@ for (const file of files.filter(f => /\.(js|mjs)$/.test(f))) {
   const source = await readFile(file, 'utf8');
   for (const match of source.matchAll(/from ['"]([.][^'"]+)['"]/g)) await access(path.resolve(path.dirname(file), match[1].split('?')[0]));
 }
-const assets = [...new Set(['assets/rapscallion-command.webp', 'assets/academy-mark.svg', ...CREW.flatMap(c => [c.portrait, `assets/work-${c.id}.webp`]), ...GALLERY.map(g => g.file)])];
+const assets = [...new Set(['assets/rapscallion-command.webp', 'assets/academy-mark.svg', 'assets/work-nova-bridge.webp', ...CREW.flatMap(c => [c.portrait, `assets/work-${c.id}.webp`, `assets/work-${c.id}-mission.webp`, `assets/work-${c.id}-reward.webp`]), ...GALLERY.map(g => g.file)])];
 for (const file of assets) await access(path.join(root, file));
 const index = await readFile('index.html', 'utf8');
 for (const match of index.matchAll(/(?:src|href)="((?:js|css|assets)\/[^"#]+)"/g)) await access(path.join(root, match[1].split('?')[0]));

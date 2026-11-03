@@ -33,8 +33,28 @@
 .work-switch span { margin-left: 3px; color: var(--muted); }
 .work-switch[aria-checked="true"] { border-color: #69b9ac; }
 .work-switch[aria-checked="true"] span { color: #9ae0d4; }
-.work-mode .hero-art { width: 63%; object-position: center 24%; }
+.work-mode .hero-art { object-position: center 40%; }
 @media(max-width:700px) {
   .site-header { gap: 8px; padding-inline: 12px; }
-  .work-mode .hero-art { width: 100%; object-position: center top; }
+  .work-mode .hero-art { object-position: 28% center; }
+}
+
+.work-mode .debrief-nova > img {
+  height: auto;
+  aspect-ratio: 2 / 1;
+  object-position: center;
+}
+.work-mode .gallery-open,
+.work-mode .gallery-locked-art {
+  height: auto;
+  aspect-ratio: 2 / 1;
+}
+.work-mode .gallery-open img { object-position: center; }
+@media (max-width: 700px) {
+  .work-mode .brief-nova { grid-template-columns: 1fr; }
+  .work-mode .brief-nova .portrait-frame {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
 }

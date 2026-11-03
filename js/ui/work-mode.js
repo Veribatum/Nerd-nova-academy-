@@ -8,6 +8,6 @@ export function readWorkMode() {
   }
 }
 
-export function crewArt(ctx, crew, offDutyArt = crew.portrait) {
-  return ctx.ui?.workMode ? `assets/work-${crew.id}.webp` : offDutyArt;
+export function crewArt(ctx, crew, offDutyArt = crew.portrait, scene = '') {
+  return ctx.ui?.workMode ? `assets/work-${crew.id}${scene ? `-${scene}` : ''}.webp` : offDutyArt;
 }
