@@ -49,9 +49,22 @@ function Invoke-AcademyLab([string]$Operation, [string]$KeyPath) {
     if (-not (Test-Path $ssh)) { throw 'Windows OpenSSH Client is required.' }
     if (-not (Test-Path $KeyPath)) { throw 'Run setup-lab.bat once to enroll this VM.' }
     $result = Invoke-AcademyProcess $ssh @('-T', '-p', '2224', '-i', $KeyPath, '-o', 'BatchMode=yes', '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'ConnectTimeout=5', 'jamean@127.0.0.1', "academy $Operation")
+    if ($result.ExitCode -eq 255) {
+        if ($result.ErrorText -match 'Host key verification failed|REMOTE HOST IDENTIFICATION HAS CHANGED') {
+            throw 'SSH host key verification failed for nova-academy. Check the saved host key against the Vehicle Node before reconnecting.'
+        }
+        if ($result.ErrorText -match 'Permission denied') {
+            throw 'The VM rejected the Academy SSH key. Run setup-lab.bat to enroll nova-academy.'
+        }
+        throw 'SSH could not connect to nova-academy on port 2224. Check the Vehicle Node and its SSH forwarding.'
+    }
+    if ([string]::IsNullOrWhiteSpace($result.Output)) {
+        throw 'The VM returned no lab response. Run setup-lab.bat to check enrollment.'
+    }
     try { $data = $result.Output | ConvertFrom-Json } catch { throw 'The enrolled VM did not return lab evidence. Check SSH or rerun setup-lab.bat.' }
+    if ($data -isnot [pscustomobject]) { throw 'Unexpected lab response from nova-academy.' }
     if ($result.ExitCode -ne 0) {
-        if ($data.PSObject.Properties.Name -contains 'error') { throw [string]$data.error }
+        if ($data.PSObject.Properties['error']) { throw [string]$data.error }
         throw 'The VM rejected the lab operation.'
     }
     return $data
