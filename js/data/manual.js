@@ -1,4 +1,12 @@
 export const MANUAL = [
+  { id: 'link-triage', title: 'Link triage / Interface DOWN or no carrier', icon: 'network',
+    lead: 'Check administrative state, carrier, addressing, and route selection before changing configuration.',
+    sections: [
+      ['Read the flags', 'ip -br address\nip link show dev test0', 'The UP flag inside angle brackets means the interface is administratively enabled. If UP is absent, it is disabled. If UP is present but LOWER_UP is absent on an Ethernet link, investigate carrier, the peer, or the virtual connection. An IP address can still appear on a disabled interface.'],
+      ['Network is unreachable / No route', 'ip route\nip route get 198.51.100.2', 'This error means the kernel cannot find a usable route to that destination. Compare the link flags, address and prefix, and connected route. A missing route can also result from a wrong prefix or a missing gateway on a routed network.'],
+      ['Change one thing and retest', 'sudo ip link set dev test0 up\nping -c 3 198.51.100.2', 'This example enables a fictional interface after confirming it was administratively disabled. Substitute the approved interface and peer from your briefing. For namespace labs, keep ip commands scoped with ip -n and run ping with ip netns exec as shown in the mission. Recheck link state and routing before retesting the peer.']
+    ] },
+
   { id:'vim', title:'Vim / Change the right file', icon:'terminal',
     lead:'First identify what the file controls. Back up, edit one setting, inspect the diff, apply only where required and verify behavior.',
     sections:[

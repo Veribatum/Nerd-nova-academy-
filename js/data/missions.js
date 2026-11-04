@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.7';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.7';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.8';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.8';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -13,8 +13,8 @@ export const MISSIONS = [
     nova: 'Morning, Marine. The vehicle is giving us the silent treatment. I already tried looking disappointed. Your turn: inspect the link before you start rebuilding my ship.',
     debrief: 'lab0 had been administratively disabled. An address can remain assigned to a DOWN interface. Bringing the correct interface UP restored a usable connected route and peer traffic. The management NICs stayed outside the training namespaces.',
     lesson: 'Start with link state, then addressing, then reachability. Make one change and test the result.',
-    hints: ['Compare the approved baseline with the actual state of lab0. An assigned address does not mean the interface is up.', 'Use ip -br address, then inspect lab0. Look for the administrative UP flag.', 'In the simulator: sudo ip link set lab0 up. In the VM: sudo ip -n nn-academy link set lab0 up. Then test the peer.'],
-    commands: ['ip -br address', 'ip link show lab0', 'ip route', 'ping -c 3 192.0.2.9', 'sudo ip link set lab0 up'], vm: true },
+    hints: ['What does the link output tell you that the IP address does not?', 'Open the Field Manual and search for DOWN or Network is unreachable. Compare the flags with the approved baseline.', 'In the simulator: sudo ip link set lab0 up. In the VM: sudo ip -n nn-academy link set lab0 up. Then test the peer.'],
+    commands: ['ip -br address', 'ip link show lab0', 'ip route', 'ping -c 3 192.0.2.9'], vm: true },
   { id: 'cam', number: '02', title: 'The Silent Camera', short: 'Ping works. The picture doesn’t.',
     track: 'NETWORKS', skills: ['Networking', 'Packets'], level: 'Watchstander', minutes: '10–15', xp: 250,
     location: 'Rapscallion / Observation camera control', watch: '0800 · Surveillance watch',

@@ -1,14 +1,14 @@
-import { WORK_MODE_KEY, readWorkMode, crewArt } from './ui/work-mode.js?v=1.4.7';
-import { editConfig } from './sim/config.js?v=1.4.7';
-import { ProgressStore, xpTotal } from './core/progress.js?v=1.4.7';
-import { CloudSync } from './core/sync.js?v=1.4.7';
-import { Companion, validVMReceipt } from './lab/companion.js?v=1.4.7';
-import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.4.7';
-import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.4.7';
-import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.4.7';
-import { createPcap } from './sim/pcap.js?v=1.4.7';
-import * as screens from './ui/screens.js?v=1.4.7';
-import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.7';
+import { WORK_MODE_KEY, readWorkMode, crewArt } from './ui/work-mode.js?v=1.4.8';
+import { editConfig } from './sim/config.js?v=1.4.8';
+import { ProgressStore, xpTotal } from './core/progress.js?v=1.4.8';
+import { CloudSync } from './core/sync.js?v=1.4.8';
+import { Companion, validVMReceipt } from './lab/companion.js?v=1.4.8';
+import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.4.8';
+import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.4.8';
+import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.4.8';
+import { createPcap } from './sim/pcap.js?v=1.4.8';
+import * as screens from './ui/screens.js?v=1.4.8';
+import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.8';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
@@ -320,7 +320,7 @@ window.addEventListener('storage', event => {
   }
 });
 // Static import keeps this event handler synchronous and testable.
-import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.4.7';
+import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.4.8';
 function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase() + ' / ' + new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); }
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');
