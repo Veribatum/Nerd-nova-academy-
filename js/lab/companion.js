@@ -6,7 +6,7 @@ export function validVMReceipt(data, attempt) {
     typeof data.receipt === 'string' && /^[a-f0-9]{64}$/.test(data.receipt));
 }
 export class Companion extends EventTarget {
-  constructor(fetcher = globalThis.fetch, storage = globalThis.sessionStorage) {
+  constructor(fetcher = globalThis.fetch.bind(globalThis), storage = globalThis.sessionStorage) {
     super(); this.fetcher = fetcher; this.storage = storage; this.info = null; this.vm = null; this.lab = null;
     this.error = ''; this.token = ''; this.attempt = '';
     try { this.token = storage.getItem('nova_lab_token') || ''; } catch {}

@@ -1,4 +1,4 @@
-import { mergeProgress, normalize } from './progress.js?v=1.4.6';
+import { mergeProgress, normalize } from './progress.js?v=1.4.7';
 const utf8 = new TextEncoder();
 const text = new TextDecoder();
 const base64 = bytes => { let s = ''; for (const b of bytes) s += String.fromCharCode(b); return btoa(s); };
@@ -30,7 +30,7 @@ export function validateRepo(repo) {
   return repo;
 }
 export class CloudSync extends EventTarget {
-  constructor(store, fetcher = globalThis.fetch, storage = globalThis.localStorage) {
+  constructor(store, fetcher = globalThis.fetch.bind(globalThis), storage = globalThis.localStorage) {
     super(); this.store = store; this.fetcher = fetcher; this.storage = storage;
     this.session = null; this.status = 'Offline save'; this.lastSuccess = ''; this.timer = null; this.busy = null;
     this.config = null;
