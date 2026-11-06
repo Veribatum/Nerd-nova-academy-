@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.9';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.9';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.10';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.10';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -156,7 +156,17 @@ export const GALLERY = [
   { id: 'sylvanas-candlelight', crew: 'sylvanas', title: 'Candlelight', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-candlelight.webp', mission: 'sylvanas-wifi', unlock: 6 },
   { id: 'sylvanas-quiet-evening', crew: 'sylvanas', title: 'A quiet evening', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-quiet-evening.webp', mission: 'sylvanas-wifi', unlock: 8 },
   { id: 'sylvanas-moonlit-window', crew: 'sylvanas', title: 'Moonlit window', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-moonlit-window.webp', mission: 'sylvanas-wifi', unlock: 12 },
-  { id: 'sylvanas-lore-and-logs', crew: 'sylvanas', title: 'Lore and logs', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-lore-and-logs.webp', mission: 'sylvanas-wifi', unlock: 10 }
+  { id: 'sylvanas-lore-and-logs', crew: 'sylvanas', title: 'Lore and logs', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-lore-and-logs.webp', mission: 'sylvanas-wifi', unlock: 10 },
+  { id: 'nova-ready-room-watch', crew: 'nova', title: 'Ready room watch', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-ready-room-watch.webp', mission: 'nova-wifi', unlock: 5 },
+  { id: 'nova-bridge-kiss', crew: 'nova', title: 'Transmission received', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-bridge-kiss.webp', mission: 'nova-wifi', unlock: 12 },
+  { id: 'nova-captains-toast', crew: 'nova', title: 'Captain’s toast', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-captains-toast.webp', mission: 'nova-wifi', unlock: 6 },
+  { id: 'nova-last-round', crew: 'nova', title: 'One last round', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-last-round.webp', mission: 'nova-wifi', unlock: 11 },
+  { id: 'nova-dog-watch', crew: 'nova', title: 'Dog watch', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-dog-watch.webp', mission: 'nova-wifi', unlock: 8 },
+  { id: 'nova-cabin-comms', crew: 'nova', title: 'Cabin comms', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-cabin-comms.webp', mission: 'nova-wifi', unlock: 3 },
+  { id: 'nova-maintenance-complete', crew: 'nova', title: 'Maintenance complete', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-maintenance-complete.webp', mission: 'nova-wifi', unlock: 4 },
+  { id: 'nova-purple-lounge', crew: 'nova', title: 'Purple lounge', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-purple-lounge.webp', mission: 'nova-wifi', unlock: 10 },
+  { id: 'nova-bench-diagnostics', crew: 'nova', title: 'Bench diagnostics', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-bench-diagnostics.webp', mission: 'nova-wifi', unlock: 7 },
+  { id: 'nova-hangar-link', crew: 'nova', title: 'Hangar link', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-hangar-link.webp', mission: 'nova-wifi', unlock: 9 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

@@ -41,3 +41,5 @@ Release 1.4.5 adds four previously unused user-supplied images to the Home off-d
 Release 1.4.6 adds seven user-supplied Home gallery photos. The bridge group photo is filed under Jenny.
 
 Release 1.4.9 integrates ten user-supplied Sylvanas images. The network rack scene appears during her Home mission briefings and investigations, the console portrait appears on her Home crew card, and all ten have persistent gallery unlock IDs. Work mode uses armored scenes and hides the gallery.
+
+Release 1.4.10 integrates ten user-supplied Nova photos. Cabin comms is her Home crew portrait, Hangar link is her Home mission scene, and all ten appear as progressive Home gallery rewards. Work mode uses armored scenes and hides the gallery.

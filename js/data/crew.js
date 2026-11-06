@@ -1,6 +1,6 @@
 export const CREW = [
   { id: 'nova', name: 'Nova', role: 'Pilot · mission control · trouble magnet', station: 'Command deck',
-    portrait: 'assets/crew-nova.webp', color: '#e7b477', wifiMission: 'nova-wifi',
+    portrait: 'assets/nova-cabin-comms.webp', missionArt: 'assets/nova-hangar-link.webp', color: '#e7b477', wifiMission: 'nova-wifi',
     intro: 'Welcome aboard the Rapscallion, Captain. Fix my connection and I’ll send you something considerably more interesting than a status report.',
     thanks: 'Working Wi-Fi. Actual evidence. Look at you, making competence attractive. Check your inbox, Marine.',
     ticket: 'My connection works by address, but the archive won’t load by name. I would like my music back before I start singing at you.' },
