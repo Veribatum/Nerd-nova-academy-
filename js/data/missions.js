@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.10';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.10';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.11';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.11';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -166,7 +166,17 @@ export const GALLERY = [
   { id: 'nova-maintenance-complete', crew: 'nova', title: 'Maintenance complete', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-maintenance-complete.webp', mission: 'nova-wifi', unlock: 4 },
   { id: 'nova-purple-lounge', crew: 'nova', title: 'Purple lounge', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-purple-lounge.webp', mission: 'nova-wifi', unlock: 10 },
   { id: 'nova-bench-diagnostics', crew: 'nova', title: 'Bench diagnostics', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-bench-diagnostics.webp', mission: 'nova-wifi', unlock: 7 },
-  { id: 'nova-hangar-link', crew: 'nova', title: 'Hangar link', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-hangar-link.webp', mission: 'nova-wifi', unlock: 9 }
+  { id: 'nova-hangar-link', crew: 'nova', title: 'Hangar link', caption: 'A personal transmission from Nova aboard the Rapscallion.', file: 'assets/nova-hangar-link.webp', mission: 'nova-wifi', unlock: 9 },
+  { id: 'samus-comms-repair', crew: 'samus', title: 'Comms repair', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-comms-repair.webp', mission: 'samus-wifi', unlock: 5 },
+  { id: 'samus-systems-restored', crew: 'samus', title: 'Systems restored', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-systems-restored.webp', mission: 'samus-wifi', unlock: 8 },
+  { id: 'samus-rack-diagnostics', crew: 'samus', title: 'Rack diagnostics', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-rack-diagnostics.webp', mission: 'samus-wifi', unlock: 3 },
+  { id: 'samus-mission-briefing', crew: 'samus', title: 'Mission briefing', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-mission-briefing.webp', mission: 'samus-wifi', unlock: 4 },
+  { id: 'samus-bounty-quarters', crew: 'samus', title: 'Bounty quarters', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-bounty-quarters.webp', mission: 'samus-wifi', unlock: 6 },
+  { id: 'samus-good-work-marine', crew: 'samus', title: 'Good work, Marine', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-good-work-marine.webp', mission: 'samus-wifi', unlock: 7 },
+  { id: 'samus-bunk-break', crew: 'samus', title: 'Bunk break', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-bunk-break.webp', mission: 'samus-wifi', unlock: 11 },
+  { id: 'samus-quiet-cockpit', crew: 'samus', title: 'Quiet cockpit', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-quiet-cockpit.webp', mission: 'samus-wifi', unlock: 12 },
+  { id: 'samus-mission-complete', crew: 'samus', title: 'Mission complete', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-mission-complete.webp', mission: 'samus-wifi', unlock: 9 },
+  { id: 'samus-all-systems-green', crew: 'samus', title: 'All systems green', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-all-systems-green.webp', mission: 'samus-wifi', unlock: 10 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

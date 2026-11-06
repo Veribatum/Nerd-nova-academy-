@@ -10,7 +10,7 @@ export const CREW = [
     thanks: 'A precise repair. No collateral damage. You have earned my attention—and the photograph I promised.',
     ticket: 'My console sees no wireless networks. The access point is operating. Begin with evidence, not excuses.' },
   { id: 'samus', name: 'Samus', role: 'Bounty hunter · shuttle operations · zero patience for lag', station: 'Shuttle bay',
-    portrait: 'assets/crew-samus.webp', color: '#83b4e4', wifiMission: 'samus-wifi',
+    portrait: 'assets/samus-bounty-quarters.webp', missionArt: 'assets/samus-rack-diagnostics.webp', color: '#83b4e4', wifiMission: 'samus-wifi',
     intro: 'Contracts first. Then downtime. Get my terminal onto the right network and I’ll make the debrief worth opening.',
     thanks: 'Connection restored. Contract uploaded. Nice work, Captain. There’s a personal transmission waiting for you.',
     ticket: 'The terminal says connected, but my flight-data upload fails. Someone changed the active wireless profile during the handover.' },
