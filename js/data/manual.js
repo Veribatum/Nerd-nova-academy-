@@ -33,6 +33,15 @@ export const MANUAL = [
       ['The route actually used', 'ip route\nip route get 203.0.113.20', 'Linux chooses the most specific matching prefix first. Inspect the selected next hop rather than guessing from the default route.'],
       ['Services and access', 'systemctl status telemetry\njournalctl -u telemetry -n 20\nls -l /srv/academy/telemetry.cfg', 'The service account needs access through every directory in the path and to the file. Read logs before changing permissions.']
     ], url: 'https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/configuring_and_managing_networking/index' },
+  { id: 'minicom', title: 'Minicom / Serial console access to a switch', icon: 'terminal',
+    lead: 'Need to know: minicom -s opens the setup menu on your Linux computer so you can configure a serial console connection to a switch or router. It does not require the switch to have a reachable IP address.',
+    sections: [
+      ['Open setup on the Linux host', 'minicom -s', 'The -s option means setup. Run this in the terminal of the Linux machine connected to the console cable. If local permissions require elevated access, use sudo minicom -s. Commands entered after connecting go to the device console, not your Linux shell.'],
+      ['Identify the serial adapter', 'ls -l /dev/serial/by-id/\nls -l /dev/ttyUSB* /dev/ttyACM*', 'Look for the console adapter on the connected Linux host. USB serial adapters often appear as ttyUSB or ttyACM devices; a missing match is possible. These are examples, not the confirmed port for your switch. In a VM, the adapter must be attached to that VM.'],
+      ['Match the switch console settings', 'Serial port setup → Serial device\nBps/Par/Bits → baud rate, parity, data bits, stop bits\nHardware Flow Control / Software Flow Control', 'Choose the detected device and match the manufacturer’s console requirements. Baud rates such as 9600 or 115200 and 8N1 are common examples, not confirmed settings for your switch. 8N1 means eight data bits, no parity and one stop bit. Flow-control settings must also match.'],
+      ['Save and connect', 'Save setup as dfl → Exit', 'Save setup as dfl preserves the Minicom defaults. Exit leaves setup and enters the terminal session; Exit from Minicom closes the program instead. Press Enter to check for the switch prompt. Saving Minicom settings does not save the switch configuration.'],
+      ['Help, exit and troubleshoot', 'Ctrl+A, release, then Z → help\nCtrl+A, release, then O → setup\nCtrl+A, release, then Q → quit without modem reset', 'These use the default command prefix. Blank screen: check cable, device selection, switch power and console settings. Garbled text: compare baud and framing. Output but no response to typing: inspect flow control and cable compatibility. Permission errors belong to the Linux host; do not change switch settings to fix them.']
+    ], url: 'https://man7.org/linux/man-pages/man1/minicom.1.html' },
   { id: 'switching', title: 'Switches / Follow the port', icon: 'network',
     lead: 'A green link light does not validate VLAN membership, Layer 3 reachability or application traffic.',
     sections: [
