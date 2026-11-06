@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.8';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.8';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.9';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.9';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -146,7 +146,17 @@ export const GALLERY = [
   { id: 'late-shift', crew: 'sylvanas', title: 'Late shift', caption: 'I saved the logs and a seat for you.', file: 'assets/home-late-shift.webp', mission: 'sylvanas-wifi', unlock: 12 },
   { id: 'cabin-break', crew: 'samus', title: 'Cabin break', caption: 'Shuttle parked. Comms on silent.', file: 'assets/home-cabin-break.webp', mission: 'samus-wifi', unlock: 12 },
   { id: 'moonlit-bonfire', crew: 'nova', title: 'Moonlit bonfire', caption: 'Last one to the fire owes the crew a round.', file: 'assets/home-moonlit-bonfire.webp', mission: 'nova-wifi', unlock: 7 },
-  { id: 'arcade-token', crew: 'nova', title: 'One more credit', caption: 'Your move, Captain.', file: 'assets/home-arcade-token.webp', mission: 'nova-wifi', unlock: 12 }
+  { id: 'arcade-token', crew: 'nova', title: 'One more credit', caption: 'Your move, Captain.', file: 'assets/home-arcade-token.webp', mission: 'nova-wifi', unlock: 12 },
+  { id: 'sylvanas-network-watch', crew: 'sylvanas', title: 'Network watch', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-network-watch.webp', mission: 'sylvanas-wifi', unlock: 3 },
+  { id: 'sylvanas-node-recovery', crew: 'sylvanas', title: 'Node recovery', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-node-recovery.webp', mission: 'sylvanas-wifi', unlock: 5 },
+  { id: 'sylvanas-engineering-watch', crew: 'sylvanas', title: 'Engineering watch', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-engineering-watch.webp', mission: 'sylvanas-wifi', unlock: 7 },
+  { id: 'sylvanas-quiet-console', crew: 'sylvanas', title: 'A quiet console', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-quiet-console.webp', mission: 'sylvanas-wifi', unlock: 9 },
+  { id: 'sylvanas-purple-quarters', crew: 'sylvanas', title: 'Purple quarters', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-purple-quarters.webp', mission: 'sylvanas-wifi', unlock: 11 },
+  { id: 'sylvanas-reading-glasses', crew: 'sylvanas', title: 'Reading glasses', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-reading-glasses.webp', mission: 'sylvanas-wifi', unlock: 4 },
+  { id: 'sylvanas-candlelight', crew: 'sylvanas', title: 'Candlelight', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-candlelight.webp', mission: 'sylvanas-wifi', unlock: 6 },
+  { id: 'sylvanas-quiet-evening', crew: 'sylvanas', title: 'A quiet evening', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-quiet-evening.webp', mission: 'sylvanas-wifi', unlock: 8 },
+  { id: 'sylvanas-moonlit-window', crew: 'sylvanas', title: 'Moonlit window', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-moonlit-window.webp', mission: 'sylvanas-wifi', unlock: 12 },
+  { id: 'sylvanas-lore-and-logs', crew: 'sylvanas', title: 'Lore and logs', caption: 'A personal transmission from Sylvanas aboard the Rapscallion.', file: 'assets/sylvanas-lore-and-logs.webp', mission: 'sylvanas-wifi', unlock: 10 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

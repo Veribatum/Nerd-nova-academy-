@@ -9,5 +9,5 @@ export function readWorkMode() {
 }
 
 export function crewArt(ctx, crew, offDutyArt = crew.portrait, scene = 'crew') {
-  return ctx.ui?.workMode ? `assets/work-${crew.id}-${scene}.webp` : offDutyArt;
+  return ctx.ui?.workMode ? `assets/work-${crew.id}-${scene}.webp` : scene === 'mission' && crew.missionArt ? crew.missionArt : offDutyArt;
 }

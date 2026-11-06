@@ -5,7 +5,7 @@ export const CREW = [
     thanks: 'Working Wi-Fi. Actual evidence. Look at you, making competence attractive. Check your inbox, Marine.',
     ticket: 'My connection works by address, but the archive won’t load by name. I would like my music back before I start singing at you.' },
   { id: 'sylvanas', name: 'Sylvanas', role: 'Tactics · reconnaissance · exceptionally high standards', station: 'Observation quarters',
-    portrait: 'assets/crew-sylvanas.webp', color: '#c5a7dd', wifiMission: 'sylvanas-wifi',
+    portrait: 'assets/sylvanas-quiet-console.webp', missionArt: 'assets/sylvanas-network-watch.webp', color: '#c5a7dd', wifiMission: 'sylvanas-wifi',
     intro: 'I prefer precision, Captain. Restore my connection without dismantling the ship and perhaps I shall reward your attention to detail.',
     thanks: 'A precise repair. No collateral damage. You have earned my attention—and the photograph I promised.',
     ticket: 'My console sees no wireless networks. The access point is operating. Begin with evidence, not excuses.' },

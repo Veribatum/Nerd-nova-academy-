@@ -39,3 +39,5 @@ Release 1.4.4 adds eight generated live-action off-duty scenes, two per crew mem
 Release 1.4.5 adds four previously unused user-supplied images to the Home off-duty album.
 
 Release 1.4.6 adds seven user-supplied Home gallery photos. The bridge group photo is filed under Jenny.
+
+Release 1.4.9 integrates ten user-supplied Sylvanas images. The network rack scene appears during her Home mission briefings and investigations, the console portrait appears on her Home crew card, and all ten have persistent gallery unlock IDs. Work mode uses armored scenes and hides the gallery.
