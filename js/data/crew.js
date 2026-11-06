@@ -15,7 +15,7 @@ export const CREW = [
     thanks: 'Connection restored. Contract uploaded. Nice work, Captain. There’s a personal transmission waiting for you.',
     ticket: 'The terminal says connected, but my flight-data upload fails. Someone changed the active wireless profile during the handover.' },
   { id: 'jenny', name: 'Jenny', role: 'Embodied ship AI · systems · devastatingly accurate sarcasm', station: 'Data core',
-    portrait: 'assets/crew-jenny.webp', color: '#89d5de', wifiMission: 'jenny-wifi',
+    portrait: 'assets/jenny-shuttle-sunset.webp', color: '#89d5de', wifiMission: 'jenny-wifi',
     intro: 'Four crew members. One shared wireless network. A statistically predictable amount of drama. Verified repairs earn personal photo transmissions, Captain.',
     thanks: 'All checks passed. Your reward has been delivered. I have classified this as positive reinforcement. Nova has classified it differently.',
     ticket: 'My link is associated, but packet loss spikes in the crowded band. Compare the scan with the saved connection before changing anything.' }

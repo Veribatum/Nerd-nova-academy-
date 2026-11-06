@@ -1,5 +1,5 @@
-import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.11';
-import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.11';
+import { CONFIG_MISSIONS } from './config-missions.js?v=1.4.12';
+import { WIFI_MISSIONS } from './wifi-missions.js?v=1.4.12';
 export const MISSIONS = [
   { id: 'rhel-link', number: '01', title: 'Lost at Launch', short: 'The vehicle has gone quiet.',
     track: 'RHEL', skills: ['Linux', 'Networking', 'Virtualization'], level: 'Watchstander', minutes: '10–15', xp: 300, vmXp: 450,
@@ -176,7 +176,9 @@ export const GALLERY = [
   { id: 'samus-bunk-break', crew: 'samus', title: 'Bunk break', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-bunk-break.webp', mission: 'samus-wifi', unlock: 11 },
   { id: 'samus-quiet-cockpit', crew: 'samus', title: 'Quiet cockpit', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-quiet-cockpit.webp', mission: 'samus-wifi', unlock: 12 },
   { id: 'samus-mission-complete', crew: 'samus', title: 'Mission complete', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-mission-complete.webp', mission: 'samus-wifi', unlock: 9 },
-  { id: 'samus-all-systems-green', crew: 'samus', title: 'All systems green', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-all-systems-green.webp', mission: 'samus-wifi', unlock: 10 }
+  { id: 'samus-all-systems-green', crew: 'samus', title: 'All systems green', caption: 'A personal transmission from Samus aboard the Rapscallion.', file: 'assets/samus-all-systems-green.webp', mission: 'samus-wifi', unlock: 10 },
+  { id: 'jenny-shuttle-sunset', crew: 'jenny', title: 'Shuttle sunset', caption: 'A personal transmission from Jenny aboard the Rapscallion.', file: 'assets/jenny-shuttle-sunset.webp', mission: 'jenny-wifi', unlock: 4 },
+  { id: 'jenny-blue-hour-transmission', crew: 'jenny', title: 'Blue-hour transmission', caption: 'A personal transmission from Jenny aboard the Rapscallion.', file: 'assets/jenny-blue-hour-transmission.webp', mission: 'jenny-wifi', unlock: 9 }
 ];
 export const MEDALS = [
   ['FIRST CONTACT', 'First Contact', 'Complete your first operation.'],

@@ -45,3 +45,5 @@ Release 1.4.9 integrates ten user-supplied Sylvanas images. The network rack sce
 Release 1.4.10 integrates ten user-supplied Nova photos. Cabin comms is her Home crew portrait, Hangar link is her Home mission scene, and all ten appear as progressive Home gallery rewards. Work mode uses armored scenes and hides the gallery.
 
 Release 1.4.11 integrates ten user-supplied Samus photos. Bounty quarters is her Home crew portrait, Rack diagnostics is her Home mission scene, and all ten appear as progressive Home gallery rewards. Work mode uses armored scenes and hides the gallery.
+
+Release 1.4.12 integrates two user-supplied Jenny photos into progressive Home gallery rewards. Shuttle sunset is her Home crew portrait. Work mode retains armored artwork and hides the gallery. The generated flight-suit preview is not included.
