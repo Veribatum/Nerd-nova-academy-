@@ -253,6 +253,11 @@ document.addEventListener('click', async event => {
     if (action === 'filter') { ctx.ui.filter = b.dataset.value; return render(); }
     if (action === 'gallery-filter') { ctx.ui.galleryCrew = CREW.some(c => c.id === b.dataset.crew) ? b.dataset.crew : 'all'; return render(); }
     if (action === 'tool') { ctx.ui.tool = b.dataset.tool; render(); if (ctx.ui.tool === 'terminal') $('command-input')?.focus({ preventScroll: true }); return; }
+    if (action === 'mission-guide') {
+      const match = { 'switch-watch':'switch', 'rhel-link':'link triage', 'ovs-island':'ovs', cam:'udp', arp:'arp', route:'route', 'service-watch':'systemctl' };
+      ctx.ui.manualSearch = match[ctx.active?.mission] || (missionById(ctx.active?.mission)?.track || '').toLowerCase();
+      ctx.ui.tool = 'manual'; return render();
+    }
     if (action === 'link-triage') { ctx.ui.manualSearch = 'Link triage'; ctx.ui.tool = 'manual'; return render(); }
     if (action === 'refresh-lab') return refreshLab();
     if (action === 'inspect') { ctx.ui.node = b.dataset.node; if (ctx.active?.snapshot) { const s = ctx.active.snapshot; if (!s.inspected.includes('topology')) s.inspected.push('topology'); checkpoint(); } return render(); }
