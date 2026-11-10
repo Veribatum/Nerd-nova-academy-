@@ -7,7 +7,7 @@ import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.4.14';
 import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.4.14';
 import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.4.14';
 import { createPcap } from './sim/pcap.js?v=1.4.14';
-import * as screens from './ui/screens.js?v=1.4.15';
+import * as screens from './ui/screens.js?v=1.4.16';
 import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.14';
 
 const $ = id => document.getElementById(id);
