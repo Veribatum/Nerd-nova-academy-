@@ -68,3 +68,8 @@
 .work-mode .quarters-portrait img {
   object-position: center;
 }
+
+/* v1.4.17 — work-safe gallery never exposes Home Mode private photo assets */
+.work-mode .gallery-grid .gallery-open {height: auto;aspect-ratio:4/5;}
+.work-mode .gallery-grid .gallery-open img {object-fit:cover;object-position:center 30%;}
+.work-mode .gallery-grid .gallery-locked-art {height:auto;aspect-ratio:4/5;}
