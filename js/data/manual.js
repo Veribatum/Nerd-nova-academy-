@@ -2,10 +2,11 @@ export const MANUAL = [
   { id: 'link-triage', title: 'Link triage / Interface DOWN or no carrier', icon: 'network',
     lead: 'Check administrative state, carrier, addressing, and route selection before changing configuration.',
     sections: [
-      ['Read the flags', 'ip -br address\nip link show dev test0', 'The UP flag inside angle brackets means the interface is administratively enabled. If UP is absent, it is disabled. If UP is present but LOWER_UP is absent on an Ethernet link, investigate carrier, the peer, or the virtual connection. An IP address can still appear on a disabled interface.'],
+      ['Find the device from the approved address', 'ip -br address\nExample row: test0@if7  DOWN  198.51.100.1/30\nip link show dev test0', 'Match the address and prefix to the work order. In this virtual Ethernet example, test0 is the device name and @if7 is the peer interface index. Pass only test0 to the next command. On a physical host, the interface could be named enp0s8 or something else. Use the name your machine reports.'],
+      ['Read the flags', 'ip link show dev test0\nExample flags: <BROADCAST,MULTICAST,UP,LOWER_UP>', 'The UP flag inside angle brackets means the interface is administratively enabled. If UP is absent, it is disabled. If UP is present and LOWER_UP is absent on an Ethernet link, investigate carrier, the peer, or the virtual connection. The brief state column reports operational state. An IP address can still appear on a disabled interface.'],
       ['Network is unreachable / No route', 'ip route\nip route get 198.51.100.2', 'This error means the kernel cannot find a usable route to that destination. Compare the link flags, address and prefix, and connected route. A missing route can also result from a wrong prefix or a missing gateway on a routed network.'],
-      ['Change one thing and retest', 'sudo ip link set dev test0 up\nping -c 3 198.51.100.2', 'This example enables a fictional interface after confirming it was administratively disabled. Substitute the approved interface and peer from your briefing. For namespace labs, keep ip commands scoped with ip -n and run ping with ip netns exec as shown in the mission. Recheck link state and routing before retesting the peer.']
-    ] },
+      ['Change one thing and retest', 'sudo ip link set dev test0 up\nping -c 3 198.51.100.2', 'This example enables a fictional interface after confirming it was administratively disabled. Substitute the device you identified and the approved peer. In a namespace lab, insert -n and the namespace name after ip. To run ping there, use sudo ip netns exec followed by the namespace name and the ping command. Recheck link state and routing before retesting the peer.']
+    ], url: 'https://man7.org/linux/man-pages/man8/ip-link.8.html' },
 
   { id:'vim', title:'Vim / Change the right file', icon:'terminal',
     lead:'First identify what the file controls. Back up, edit one setting, inspect the diff, apply only where required and verify behavior.',
@@ -28,8 +29,8 @@ export const MANUAL = [
   { id: 'rhel', title: 'RHEL / Read the machine', icon: 'terminal',
     lead: 'State, configuration and evidence are different things. Compare what is running with the approved baseline.',
     sections: [
-      ['First look', 'ip -br address', 'Shows addresses and current interface state. UP is administrative; LOWER_UP indicates carrier.'],
-      ['NetworkManager', 'nmcli device status\nnmcli connection show\nnmcli device show enp0s8', 'A device is a network interface. A connection is a saved NetworkManager profile. Read them before modifying them. The first real Academy mission uses iproute2 inside a namespace; it does not modify your saved profiles.'],
+      ['First look', 'ip -br address\nip link show dev enp0s8', 'The brief view lists addresses and operational state. Use the detailed link flags to check administrative UP and carrier (LOWER_UP).'],
+      ['NetworkManager', 'nmcli device status\nnmcli connection show\nnmcli device show enp0s8\nsudo nmcli connection up "Approved Profile" ifname enp0s8', 'A device is a network interface. A connection is a NetworkManager profile. The last line is an example that activates the approved profile on a specific device after you have identified both. ip link set changes the kernel link state directly. NetworkManager activation also applies the profile’s settings. Use the authorized procedure for the host and protect any management path you rely on.'],
       ['The route actually used', 'ip route\nip route get 203.0.113.20', 'Linux chooses the most specific matching prefix first. Inspect the selected next hop rather than guessing from the default route.'],
       ['Services and access', 'systemctl status telemetry\njournalctl -u telemetry -n 20\nls -l /srv/academy/telemetry.cfg', 'The service account needs access through every directory in the path and to the file. Read logs before changing permissions.']
     ], url: 'https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/configuring_and_managing_networking/index' },
@@ -69,7 +70,7 @@ export const MANUAL = [
     sections: [
       ['Verified management path', 'ssh -p 2224 jamean@127.0.0.1', 'Windows localhost forwards to the designated Vehicle Node. NAT enp0s3 and the internal-network enp0s8 are protected.'],
       ['Training isolation', 'sudo ip netns list\nsudo ip -n nn-academy -br address', 'The real mission creates a veth pair inside two owned namespaces. It does not unplug a VirtualBox adapter or modify a NetworkManager profile.'],
-      ['Recovery', 'Reset lab in Academy', 'Reset deletes the owned training namespaces. The VM also checks the lease every minute and cleans up after 45 minutes. The Clean Baseline snapshot remains your broader manual fallback; the website never restores snapshots automatically.']
+      ['Cannot open network namespace / No such file or directory', 'sudo ip netns list', 'If SSH works and nn-academy is missing, check Real Lab in the Academy. The VM can accept SSH while the mission is absent. An expired 45-minute attempt is cleaned up by the VM. Use Deploy real VM or Redeploy training lab in the Academy, then rerun this check in your existing SSH session.']
     ], url: 'https://www.virtualbox.org/manual/ch06.html' },
   { id: 'method', title: 'Troubleshooting / Work the evidence', icon: 'compass',
     lead: 'Observe → form a hypothesis → make one controlled change → verify → document.',

@@ -1,14 +1,14 @@
-import { WORK_MODE_KEY, readWorkMode, crewArt } from './ui/work-mode.js?v=1.4.13';
-import { editConfig } from './sim/config.js?v=1.4.13';
-import { ProgressStore, xpTotal } from './core/progress.js?v=1.4.13';
-import { CloudSync } from './core/sync.js?v=1.4.13';
-import { Companion, validVMReceipt } from './lab/companion.js?v=1.4.13';
-import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.4.13';
-import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.4.13';
-import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.4.13';
-import { createPcap } from './sim/pcap.js?v=1.4.13';
-import * as screens from './ui/screens.js?v=1.4.13';
-import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.13';
+import { WORK_MODE_KEY, readWorkMode, crewArt } from './ui/work-mode.js?v=1.4.14';
+import { editConfig } from './sim/config.js?v=1.4.14';
+import { ProgressStore, xpTotal } from './core/progress.js?v=1.4.14';
+import { CloudSync } from './core/sync.js?v=1.4.14';
+import { Companion, liveLabState, validVMReceipt } from './lab/companion.js?v=1.4.14';
+import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.4.14';
+import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.4.14';
+import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.4.14';
+import { createPcap } from './sim/pcap.js?v=1.4.14';
+import * as screens from './ui/screens.js?v=1.4.14';
+import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.14';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
@@ -17,7 +17,7 @@ const companion = new Companion();
 const ctx = { store, sync, companion, active: null, busy: false,
   ui: { workMode: readWorkMode(), page: 'watch', mission: '', filter: 'ALL', manualSearch: '', tool: 'terminal', node: 'control',
     packet: 0, packetFilter: '', checks: null, awarded: null, dialog: '', photo: 0, crew: null, galleryCrew: 'all' } };
-let commandHistory = []; let historyPosition = 0; let toastTimer;
+let commandHistory = []; let historyPosition = 0; let toastTimer, leaseTimer;
 const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['crew', 'The crew', 'radio'], ['record', 'Service record', 'shield']];
 
 function toast(message) { $('toast').textContent = message; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').classList.remove('visible'); $('toast').textContent = ''; }, 5000); }
@@ -65,6 +65,11 @@ function render() {
   }
   $('main').innerHTML = html;
   const terminal = $('terminal-output'); if (terminal) terminal.scrollTop = terminal.scrollHeight;
+  clearTimeout(leaseTimer);
+  if (ctx.ui.page === 'mission' && ctx.active?.mode === 'vm' && ctx.ui.tool === 'live' &&
+      liveLabState(companion, ctx.active.remoteAttempt) === 'active' && companion.lab.expiresAt) {
+    leaseTimer = setTimeout(render, Math.max(0, companion.lab.expiresAt * 1000 - Date.now()));
+  }
 }
 function route() {
   const parts = location.hash.replace(/^#\/?/, '').split('/');
@@ -80,6 +85,7 @@ function route() {
   }
   ctx.ui.checks = null; render(); window.scrollTo({ top: 0, behavior: 'instant' });
   $('main').focus({ preventScroll: true });
+  if (ctx.ui.page === 'mission' && ctx.active?.mode === 'vm') refreshLab();
 }
 function go(path) { if (location.hash === `#/${path}`) route(); else location.hash = `/${path}`; }
 function showDialog(kind) {
@@ -128,9 +134,14 @@ function startSimulation(m) {
   ctx.ui.checks = null; ctx.ui.awarded = null; ctx.ui.tool = 'terminal'; ctx.ui.node = 'control';
   go(`mission/${m.id}`);
 }
+function refreshLab() {
+  return busy(() => companion.probe());
+}
 async function startVM(m) {
-  if (!companion.token || !companion.lab?.installed) { showDialog('lab'); return; }
+  let needsSetup = false;
   await busy(async () => {
+    await companion.probe();
+    if (!companion.vm?.running || !companion.token || !companion.lab?.installed) { needsSetup = true; return; }
     const deployment = await companion.operate('deploy');
     const current = store.data.current;
     if (current?.mission === m.id && current.mode === 'vm' && current.snapshot?.remoteAttempt === deployment.attempt && !current.finished) ctx.active = loadActive(m.id);
@@ -142,21 +153,35 @@ async function startVM(m) {
     ctx.ui.checks = null; ctx.ui.awarded = null; ctx.ui.tool = 'live'; closeDialog(); go(`mission/${m.id}`);
     toast(deployment.resumed ? 'Existing isolated lab resumed.' : 'Isolated training fault deployed on nova-academy.');
   });
+  if (needsSetup) showDialog('lab');
 }
 async function verify() {
   if (!ctx.active || ctx.active.finished) return;
   const active = ctx.active; const mission = missionById(active.mission);
+  if (active.mode === 'vm' && liveLabState(companion, active.remoteAttempt) !== 'active') {
+    ctx.ui.tool = 'live';
+    render();
+    return;
+  }
   await busy(async () => {
     let passed, evidence, checks;
     if (active.mode === 'sim') {
       const result = verifySimulation(active.snapshot); active.snapshot = result.state;
       ({ passed, evidence, checks } = result); checkpoint();
     } else {
-      const result = await companion.operate('verify');
+      const result = await companion.operate('verify').catch(async error => {
+        await companion.probe();
+        if (liveLabState(companion, active.remoteAttempt) !== 'active') ctx.ui.tool = 'live';
+        throw error;
+      });
       const labels = { linkUp: 'Training link administratively UP', addressCorrect: 'Approved 192.0.2.10/30 address', routePresent: 'Connected peer route present', peerReachable: 'Three real peer replies', protectedUnchanged: 'Management networking unchanged' };
       checks = Object.entries(labels).map(([key, label]) => [label, result.checks?.[key] === true]);
       passed = validVMReceipt(result, active.remoteAttempt);
-      if (result.attempt !== active.remoteAttempt) throw Error('The deployed VM attempt changed. Reopen the real mission to resume the current deployment.');
+      if (result.attempt !== active.remoteAttempt) {
+        await companion.probe();
+        ctx.ui.tool = 'live';
+        throw Error('The deployed VM attempt changed. Open Real Lab to reconnect.');
+      }
       evidence = result;
     }
     ctx.ui.checks = checks;
@@ -228,6 +253,8 @@ document.addEventListener('click', async event => {
     if (action === 'filter') { ctx.ui.filter = b.dataset.value; return render(); }
     if (action === 'gallery-filter') { ctx.ui.galleryCrew = CREW.some(c => c.id === b.dataset.crew) ? b.dataset.crew : 'all'; return render(); }
     if (action === 'tool') { ctx.ui.tool = b.dataset.tool; render(); if (ctx.ui.tool === 'terminal') $('command-input')?.focus({ preventScroll: true }); return; }
+    if (action === 'link-triage') { ctx.ui.manualSearch = 'Link triage'; ctx.ui.tool = 'manual'; return render(); }
+    if (action === 'refresh-lab') return refreshLab();
     if (action === 'inspect') { ctx.ui.node = b.dataset.node; if (ctx.active?.snapshot) { const s = ctx.active.snapshot; if (!s.inspected.includes('topology')) s.inspected.push('topology'); checkpoint(); } return render(); }
     if (action === 'packet') { ctx.ui.packet = Number(b.dataset.packet); const s = ctx.active?.snapshot;
       if (s && !s.inspected.includes('packets')) { s.inspected.push('packets'); checkpoint(); } return render(); }
@@ -320,7 +347,7 @@ window.addEventListener('storage', event => {
   }
 });
 // Static import keeps this event handler synchronous and testable.
-import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.4.13';
+import { mergeProgress as awaitImportMerge } from './core/progress.js?v=1.4.14';
 function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase() + ' / ' + new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }); }
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');

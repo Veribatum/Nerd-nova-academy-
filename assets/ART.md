@@ -8,11 +8,13 @@ Final runtime art uses the user’s established, realistic adult Rum Island char
 | crew-sylvanas.webp | Sylvanas in the Rogue’s Hangar.png |
 | crew-samus.webp | Cozy Samus Selfie in Space Cabin.png |
 | crew-jenny.webp | Jenny Painting Sylvanas’ Jet.png |
-| nova-wifi-reward.webp | 7EEC12C7-0585-4EF1-817F-17F297F2F5C1.jpeg |
+| nova-wifi-reward.webp | 608F6499-4099-47A7-9D35-91B46958817B.jpeg |
 | sylvanas-wifi-reward.webp | Sylvanas Airbase Nose Art.png |
 | samus-wifi-reward.webp | Samus Aran’s Playful Shipboard Selfie.png |
 | jenny-wifi-reward.webp | Cybernetic Pilot Jenny at Sunset.png |
 | nova-office.webp | E79AB15D-FE39-4E33-8B1A-B1F1AA74D85C.jpeg |
+| nova-after-launch.webp | 310F6675-E02D-40F6-89D6-1C41990D0295.jpeg |
+| work-jenny-crew.webp | F0245A75-B6AC-4DF6-ADDA-58E45D14A624.jpeg |
 | nova-hangar.webp | 110F2AB4-470B-4658-B646-839B5EEC4BCA.jpeg |
 | nova-ready-room.webp | 156C7563-0B77-4E4D-97C2-EC71971D0C59.jpeg |
 
@@ -47,3 +49,5 @@ Release 1.4.10 integrates ten user-supplied Nova photos. Cabin comms is her Home
 Release 1.4.11 integrates ten user-supplied Samus photos. Bounty quarters is her Home crew portrait, Rack diagnostics is her Home mission scene, and all ten appear as progressive Home gallery rewards. Work mode uses armored scenes and hides the gallery.
 
 Release 1.4.12 integrates two user-supplied Jenny photos into progressive Home gallery rewards. Shuttle sunset is her Home crew portrait. Work mode retains armored artwork and hides the gallery. The generated flight-suit preview is not included.
+
+Release 1.4.14 uses Nova’s Rapscallion lounge photo for the existing first-clear reward and Lost at Launch debrief. Jenny’s supplied bridge portrait appears on her Work Mode crew card. The Home gallery adds fifteen progressive rewards from the supplied batches.

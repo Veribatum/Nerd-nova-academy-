@@ -1,4 +1,4 @@
-import { readdir, readFile, access } from 'node:fs/promises';
+import { readdir, readFile, access, stat } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { GALLERY } from '../js/data/missions.js';
@@ -20,7 +20,9 @@ for (const file of files.filter(f => /\.(js|mjs)$/.test(f))) {
   for (const match of source.matchAll(/from ['"]([.][^'"]+)['"]/g)) await access(path.resolve(path.dirname(file), match[1].split('?')[0]));
 }
 const assets = [...new Set(['assets/rapscallion-command.webp', 'assets/academy-mark.svg', 'assets/work-nova-bridge.webp', ...CREW.flatMap(c => [c.portrait, `assets/work-${c.id}-crew.webp`, `assets/work-${c.id}-mission.webp`, `assets/work-${c.id}-reward.webp`]), ...GALLERY.map(g => g.file)])];
-for (const file of assets) await access(path.join(root, file));
+for (const file of assets) {
+  if (!(await stat(path.join(root, file))).size) throw Error(`Empty art asset: ${file}`);
+}
 const index = await readFile('index.html', 'utf8');
 for (const match of index.matchAll(/(?:src|href)="((?:js|css|assets)\/[^"#]+)"/g)) await access(path.join(root, match[1].split('?')[0]));
 process.stdout.write(`Syntax, module imports and ${assets.length} required art assets checked.\n`);

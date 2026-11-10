@@ -19,12 +19,23 @@ test('every mission’s briefing, tool views and after-action report render with
   }
 });
 test('real lab presentation renders without a synthetic snapshot and uses actual namespace commands', () => {
-  ctx.active = { mission: 'rhel-link', mode: 'vm', snapshot: null, hints: 0, remoteAttempt: 'fixture' }; ctx.ui.tool = 'live';
-  const html = screens.workstation(ctx, MISSIONS[0]); assert.ok(html.includes('sudo ip -n nn-academy')); assert.ok(html.includes('Verify real VM'));
+  const lab = { installed: true, active: true, attempt: 'fixture', expiresAt: Date.now() / 1000 + 60 };
+  const live = { ...ctx, ui: { ...ctx.ui, tool: 'live' }, companion: { lab },
+    active: { mission: 'rhel-link', mode: 'vm', snapshot: null, hints: 0, remoteAttempt: 'fixture' } };
+  const active = screens.workstation(live, MISSIONS[0]);
+  assert.match(active, /LAB ACTIVE/);
+  assert.match(active, /sudo ip -n nn-academy link show dev &lt;interface&gt;/);
+  assert.doesNotMatch(active, /link set dev lab0 up/);
+  assert.doesNotMatch(active, /data-action="verify" disabled/);
+  lab.expiresAt = Date.now() / 1000 - 60;
+  const expired = screens.workstation(live, MISSIONS[0]);
+  assert.match(expired, /LAB EXPIRED/);
+  assert.match(expired, /Redeploy training lab/);
+  assert.match(expired, /data-action="verify" disabled/);
 });
 test('rank thresholds retain the legacy 500 XP progression', () => { assert.equal(rankFor(499), 0); assert.equal(rankFor(500), 1); assert.equal(rankFor(1100), 2); });
 
-test('Work mode only emits armored crew artwork, and hides private transmissions', () => {
+test('Work mode only emits dedicated crew artwork, and hides private transmissions', () => {
   const work = { ...ctx, ui: { ...ctx.ui, workMode: true }, store: {
     data: { ...store.data, completed: MISSIONS.map(m => m.id) }
   } };

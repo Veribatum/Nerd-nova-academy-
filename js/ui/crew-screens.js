@@ -1,7 +1,7 @@
-import { crewArt } from './work-mode.js?v=1.4.13';
-import { CREW, crewById, photoUnlocked } from '../data/crew.js?v=1.4.13';
-import { MISSIONS, GALLERY } from '../data/missions.js?v=1.4.13';
-import { h, icon } from './utils.js?v=1.4.13';
+import { crewArt } from './work-mode.js?v=1.4.14';
+import { CREW, crewById, photoUnlocked } from '../data/crew.js?v=1.4.14';
+import { MISSIONS, GALLERY } from '../data/missions.js?v=1.4.14';
+import { h, icon } from './utils.js?v=1.4.14';
 
 export function crewRoster(ctx) {
   return `<div class="section-head"><div><div class="eyebrow">RAPSCALLION / PERSONAL TROUBLE TICKETS</div><h2>Same crew. Better signal.</h2></div><a class="text-link" href="#/crew">Meet the crew ${icon('arrow', 17)}</a></div><div class="crew-roster">${CREW.map(c => {

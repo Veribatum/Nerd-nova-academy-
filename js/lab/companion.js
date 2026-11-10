@@ -1,4 +1,12 @@
 const BASE = 'http://127.0.0.1:8765';
+export function liveLabState(companion, attempt, now = Date.now()) {
+  const lab = companion.lab;
+  if (!lab?.installed) return 'unknown';
+  if (!lab.active) return 'missing';
+  if (lab.attempt !== attempt) return 'changed';
+  return lab.expiresAt * 1000 <= now ? 'expired' : 'active';
+}
+
 export function validVMReceipt(data, attempt) {
   const checks = ['linkUp', 'addressCorrect', 'routePresent', 'peerReachable', 'protectedUnchanged'];
   return !!(attempt && data?.verified === true && data.active === true && data.target === 'nova-academy' &&
@@ -26,12 +34,13 @@ export class Companion extends EventTarget {
       // Keep the working original endpoint compatible with version 1.
       this.vm = await this.request('/vm/status');
       try { this.info = await this.request('/health'); } catch { this.info = { version: 1 }; }
-      if (this.token && this.info.version >= 2) {
-        try { this.lab = await this.request('/lab/status'); this.attempt = this.lab.attempt || ''; }
-        catch (error) { this.error = error.message; }
-      }
+      this.lab = this.token && this.info.version >= 2 ? await this.request('/lab/status').catch(error => {
+        this.error = error.message;
+        return null;
+      }) : null;
     } catch { this.vm = null; this.info = null; this.lab = null;
       this.error = 'Start companion/start-companion.bat on Windows, then retry. Allow local-network access if your browser asks.'; }
+    this.attempt = this.lab?.attempt || '';
     this.dispatchEvent(new Event('change')); return this.vm;
   }
   async pair(code) {
