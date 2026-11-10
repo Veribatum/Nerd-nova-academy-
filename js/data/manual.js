@@ -53,6 +53,16 @@ export const MANUAL = [
       ['If IP access is unknown, use the console', 'minicom -s\nPress Enter after establishing serial connection', 'A micro-USB or serial console can reveal the switch configuration without a known IP. Identify the host serial device and approved console settings first. No prompt? Confirm power, cable, correct serial adapter, framing and flow control. See Minicom in this manual.'],
       ['One hypothesis, one test, one record', 'Observation -> hypothesis -> safe test -> result -> next boundary', 'Example: the switch reports interface down/down. Hypothesis: the local physical segment is absent. Verify power and cabling before editing VLAN or routes. If local link and VLAN pass but the remote application still fails, capture authorized evidence and escalate to the responsible link owner instead of making blind changes.']
     ] },
+  { id:'switch-quick', title:'Switch diagnostics / what each command tells you', icon:'network',
+    lead:'Cisco IOS-style examples. Start with read-only observations: interface status, VLAN membership, and MAC learning. Interface names vary by device.',
+    sections:[
+      ['Check physical and line-protocol state','show interfaces status\nshow interfaces fastEthernet 0/7','The first command summarizes ports, operational VLAN, speed and duplex. The second shows line protocol, packet counters and errors. A green link does not prove the correct VLAN.'],
+      ['Check VLAN and switchport mode','show vlan brief\nshow interfaces fastEthernet 0/7 switchport','show vlan brief lists the access ports in each VLAN. The switchport output shows administrative and operational access/trunk mode plus access VLAN. Compare the suspect port with a known-good port.'],
+      ['Learn which MACs appear on which ports','show mac address-table dynamic\nshow mac address-table interface fastEthernet 0/7','Learned MAC addresses indicate where the switch recently saw inbound traffic. No entry does not by itself prove a bad cable or faulty switch; the table ages out.'],
+      ['Recognize CLI modes','enable\nconfigure terminal\ninterface fastEthernet 0/7\nexit\nend','enable enters privileged EXEC (#); configure terminal enters global configuration; interface selects a specific port; exit goes back one level; end returns to privileged EXEC.'],
+      ['Example of an approved LAB-ONLY change','configure terminal\ninterface fastEthernet 0/7\nswitchport mode access\nswitchport access vlan 20\nend','Use only where you have verified that the approved access VLAN is 20. This is a generic demonstration, not permission to change operational ports.'],
+      ['Retest then save','show vlan brief\nshow running-config interface fastEthernet 0/7\ncopy running-config startup-config','Confirm the running state and repeat connectivity tests before saving. Saving preserves the configuration after reboot. Some Packet Tracer devices vary in supported show commands.']
+    ], url:'https://www.cisco.com/c/en/us/support/switches/catalyst-9000-series-switches/series.html' },
   { id: 'switching', title: 'Switches / Follow the port', icon: 'network',
     lead: 'A green link light does not validate VLAN membership, Layer 3 reachability or application traffic.',
     sections: [
