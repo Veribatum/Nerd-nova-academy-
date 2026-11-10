@@ -4,7 +4,7 @@ export const REAL_LABS = {
   steps:[
    ['Create the network','In a new Packet Tracer file add one 2960 switch and three PCs. Connect PC0 to Fa0/7, PC1 to Fa0/8, PC2 to Fa0/9 with copper straight-through cables.'],
    ['Address the PCs','PC0 = 192.0.2.10/24, PC1 = 192.0.2.20/24, PC2 = 192.0.2.30/24 (Desktop → IP Configuration, mask 255.255.255.0). No default gateway is needed on this same-VLAN test.'],
-   ['Seed the fault in your own lab','On the switch CLI create VLAN 20. Configure Fa0/8 and Fa0/9 as access VLAN 20, but Fa0/7 as access VLAN 10. This is an intentionally faulty isolated topology, not a production setting.'],
+   ['Seed the fault in your own lab','On the switch CLI create VLAN 10 and VLAN 20. Configure Fa0/8 and Fa0/9 as access VLAN 20, but Fa0/7 as access VLAN 10. This is an intentionally faulty isolated topology, not a production setting.'],
    ['Investigate','Ping PC1 from PC0. Examine show interfaces status, show vlan brief, and show interfaces fastEthernet 0/7 switchport. Compare against Fa0/8. Interpret evidence before making a change.'],
    ['Repair and verify','Make one justified change to Fa0/7. Retest PC0 to PC1 and PC1 to PC2. Inspect port membership again and, after successful verification, use copy running-config startup-config.'],
    ['Report the evidence','Write the initial symptom, two diagnostic commands, your hypothesis, the change, and test results in the Academy journal. No automatic Packet Tracer verification exists yet.']
