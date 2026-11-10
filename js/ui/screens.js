@@ -133,7 +133,7 @@ function workSafeGallery(ctx) {
 }
 export function workGalleryItems(ctx) {
   const complete = ctx.store.data.completed || [];
-  const missions = MISSIONS.filter(m=>m.crew==='nova' && NOVA_WORK_ART[m.id]);
+  const missions = MISSIONS.filter(m=>NOVA_WORK_ART[m.id]);
   return [{id:'bridge',label:'On the bridge',img:NOVA_WORK_ART.bridge[0],fallback:NOVA_WORK_ART.bridge[1],unlocked:true},
     ...missions.map(m=>({id:m.id+'-before',label:m.title+' · Briefing',img:novaWorkScene(m.id)[0],fallback:novaWorkScene(m.id)[1],unlocked:true})),
     ...missions.map(m=>({id:m.id+'-after',label:m.title+' · After action',img:novaWorkScene(m.id,true)[0],fallback:novaWorkScene(m.id,true)[1],unlocked:complete.includes(m.id)})),
