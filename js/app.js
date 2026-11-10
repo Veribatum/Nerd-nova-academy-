@@ -7,7 +7,7 @@ import { MISSIONS, missionById, GALLERY } from './data/missions.js?v=1.4.14';
 import { CREW, crewById, photoUnlocked } from './data/crew.js?v=1.4.14';
 import { createSimulation, restoreSimulation, runCommand, verifySimulation, applyCamera } from './sim/engine.js?v=1.4.14';
 import { createPcap } from './sim/pcap.js?v=1.4.14';
-import * as screens from './ui/screens.js?v=1.4.16';
+import * as screens from './ui/screens.js?v=1.4.17';
 import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.14';
 
 const $ = id => document.getElementById(id);
@@ -15,17 +15,17 @@ const store = new ProgressStore();
 const sync = new CloudSync(store);
 const companion = new Companion();
 const ctx = { store, sync, companion, active: null, busy: false,
-  ui: { workMode: readWorkMode(), page: 'watch', mission: '', filter: 'ALL', manualSearch: '', tool: 'terminal', node: 'control',
+  ui: { workMode: readWorkMode(), workPhoto: 0, page: 'watch', mission: '', filter: 'ALL', manualSearch: '', tool: 'terminal', node: 'control',
     packet: 0, packetFilter: '', checks: null, awarded: null, dialog: '', photo: 0, crew: null, galleryCrew: 'all' } };
 let commandHistory = []; let historyPosition = 0; let toastTimer, leaseTimer;
-const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['crew', 'The crew', 'radio'], ['record', 'Service record', 'shield']];
+const nav = [['watch', 'Watchdesk', 'compass'], ['operations', 'Operations', 'orders'], ['manual', 'Field manual', 'book'], ['crew', 'The crew', 'radio'], ['morale', 'Gallery', 'photo'], ['record', 'Service record', 'shield']];
 
 function toast(message) { $('toast').textContent = message; $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').classList.remove('visible'); $('toast').textContent = ''; }, 5000); }
 function shell() {
   document.body.classList.toggle('work-mode', ctx.ui.workMode);
   $('work-switch').setAttribute('aria-checked', String(ctx.ui.workMode));
   $('work-switch-state').textContent = ctx.ui.workMode ? 'On' : 'Off';
-  const page = ['briefing', 'mission', 'debrief'].includes(ctx.ui.page) ? 'operations' : ctx.ui.page === 'morale' ? 'crew' : ctx.ui.page;
+  const page = ['briefing', 'mission', 'debrief'].includes(ctx.ui.page) ? 'operations' : ctx.ui.page;
   $('navigation').innerHTML = nav.map(([id, label, glyph]) => `<a href="#/${id}" class="${id === page ? 'active' : ''}" ${id === page ? 'aria-current="page"' : ''}>${icon(glyph, 19)}<span>${label}</span></a>`).join('');
   updateSaveBeacon();
   const warning = $('storage-warning'); warning.hidden = !store.warning; warning.textContent = store.warning;
@@ -98,6 +98,13 @@ function showDialog(kind) {
   if (kind === 'backups') {
     const backups = store.backups();
     html = `<div class="eyebrow">RECOVERY / LAST EIGHT LOCAL CHECKPOINTS</div><h2>Your safety copies.</h2><p>Restoring merges valid progress. Download any entry to retain its original bytes.</p><div class="backup-list">${backups.length ? backups.map((b, i) => `<div><span>${dateLabel(b.at)}</span><button class="button ghost" data-action="restore-backup" data-index="${i}">Merge</button><button class="text-link" data-action="download-backup" data-index="${i}">${icon('download', 17)} Download</button></div>`).join('') : '<p>No automatic backups yet. An earlier copy is retained whenever your saved record changes.</p>'}</div>`;
+  }
+  if (kind === 'work-photo') {
+    if (!ctx.ui.workMode) return;
+    const photo = screens.workGalleryItems(ctx)[ctx.ui.workPhoto];
+    if (!photo?.unlocked) return;
+    $('dialog').classList.add('photo-dialog');
+    html = `<div class="eyebrow">WORK MODE / NOVA / DUTY-APPROVED IMAGE</div><h2>${h(photo.label)}</h2><img class="full-photo" src="${h(photo.img)}" data-fallback="${h(photo.fallback)}" alt="${h(photo.label)}"><p>Professional training illustration; any interface text in the artwork is decorative, not technical evidence.</p>`;
   }
   if (kind === 'photo') {
     const unlocked = GALLERY.filter(g => photoUnlocked(g, store.data));
@@ -228,7 +235,7 @@ function setWorkMode(enabled) {
   const draft = input?.value;
   render();
   if (draft !== undefined && $('command-input')) $('command-input').value = draft;
-  if (enabled && ctx.ui.dialog === 'photo') {
+  if ((enabled && ctx.ui.dialog === 'photo') || (!enabled && ctx.ui.dialog === 'work-photo')) {
     closeDialog();
     $('dialog-content').replaceChildren();
   }
@@ -251,6 +258,12 @@ document.addEventListener('click', async event => {
     if (action === 'deploy-sim') return startSimulation(missionById(b.dataset.mission));
     if (action === 'deploy-vm') return startVM(missionById(b.dataset.mission));
     if (action === 'filter') { ctx.ui.filter = b.dataset.value; return render(); }
+    if (action === 'open-work-photo') {
+      if (!ctx.ui.workMode) return;
+      const idx = Number(b.dataset.photo);
+      if (!screens.workGalleryItems(ctx)[idx]?.unlocked) return;
+      ctx.ui.workPhoto = idx; return showDialog('work-photo');
+    }
     if (action === 'gallery-filter') { ctx.ui.galleryCrew = CREW.some(c => c.id === b.dataset.crew) ? b.dataset.crew : 'all'; return render(); }
     if (action === 'tool') { ctx.ui.tool = b.dataset.tool; render(); if (ctx.ui.tool === 'terminal') $('command-input')?.focus({ preventScroll: true }); return; }
     if (action === 'mission-guide') {
@@ -357,3 +370,10 @@ function clock() { $('watch-clock').textContent = new Date().toLocaleDateString(
 clock(); setInterval(clock, 60000);
 if (sync.config) sync.setStatus('Cloud vault locked');
 route();
+
+// New artwork has legacy work-safe fallbacks until image assets are installed.
+document.addEventListener('error', event => {
+  const el = event.target;
+  if (el?.tagName !== 'IMG' || !el.dataset.fallback || el.dataset.fallback === el.getAttribute('src')) return;
+  const fallback = el.dataset.fallback; el.dataset.fallback = ''; el.src = fallback;
+}, true);
