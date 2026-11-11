@@ -1,3 +1,4 @@
+import { connectMarineHub } from './core/marine-hub.js?v=1';
 import { WORK_MODE_KEY, readWorkMode, crewArt } from './ui/work-mode.js?v=1.4.14';
 import { editConfig } from './sim/config.js?v=1.4.14';
 import { ProgressStore, xpTotal } from './core/progress.js?v=1.4.14';
@@ -12,6 +13,13 @@ import { h, icon, download, dateLabel } from './ui/utils.js?v=1.4.14';
 
 const $ = id => document.getElementById(id);
 const store = new ProgressStore();
+const syncMarineHub = connectMarineHub('nova', () => ({
+  completed: [...new Set([...store.data.completed, ...store.data.legacyCompleted])].sort(),
+  rewards: Object.entries(store.data.rewards).map(([id, event]) => [id, event.xp]).sort(([a], [b]) => a.localeCompare(b)),
+  legacyXP: store.data.legacyBaseXp
+}));
+store.addEventListener('change', syncMarineHub);
+void syncMarineHub();
 const sync = new CloudSync(store);
 const companion = new Companion();
 const ctx = { store, sync, companion, active: null, busy: false,
@@ -360,7 +368,7 @@ window.addEventListener('storage', event => {
   if (event.key === 'nerdnova_v3' && event.newValue) {
     try { const incoming = JSON.parse(event.newValue); store.data = (awaitImportMerge(store.data, incoming));
       // In-memory merge only. Writing here would create a cross-tab ping-pong.
-      updateSaveBeacon(); if (!ctx.active && !$('dialog').open) render(); }
+      void syncMarineHub(); updateSaveBeacon(); if (!ctx.active && !$('dialog').open) render(); }
     catch { toast('Another tab’s save could not be read. Your current record is retained.'); }
   }
 });
